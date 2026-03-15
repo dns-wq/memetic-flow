@@ -14,6 +14,12 @@
 
 [English](./README.md) | [简体中文](./README-CN.md) | [繁體中文](./README-TW.md) | [日本語](./README-JP.md)
 
+### **[Live Demo — Try it now](https://dns-wq.github.io/memetic-flow/)**
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Try_it_now-238636?style=for-the-badge&logo=github&logoColor=white)](https://dns-wq.github.io/memetic-flow/)
+
+*No installation required. 3 real-world scenarios with interactive force graphs, metrics, and timeline replay.*
+
 </div>
 
 ---

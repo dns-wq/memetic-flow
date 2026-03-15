@@ -14,6 +14,12 @@
 
 [English](./README.md) | [简体中文](./README-CN.md) | [繁體中文](./README-TW.md) | [日本語](./README-JP.md)
 
+### **[ライブデモ — 今すぐ試す](https://dns-wq.github.io/memetic-flow/)**
+
+[![ライブデモ](https://img.shields.io/badge/ライブデモ-今すぐ試す-238636?style=for-the-badge&logo=github&logoColor=white)](https://dns-wq.github.io/memetic-flow/)
+
+*インストール不要。3つの実データシナリオ、インタラクティブなフォースグラフ、メトリクス、タイムラインリプレイ。*
+
 </div>
 
 ---

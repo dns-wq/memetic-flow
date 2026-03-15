@@ -14,6 +14,12 @@
 
 [English](./README.md) | [简体中文](./README-CN.md) | [繁體中文](./README-TW.md) | [日本語](./README-JP.md)
 
+### **[在线演示 — 立即体验](https://dns-wq.github.io/memetic-flow/)**
+
+[![在线演示](https://img.shields.io/badge/在线演示-立即体验-238636?style=for-the-badge&logo=github&logoColor=white)](https://dns-wq.github.io/memetic-flow/)
+
+*无需安装。3个真实场景，交互式力导向图、指标仪表盘、时间线回放。*
+
 </div>
 
 ---
