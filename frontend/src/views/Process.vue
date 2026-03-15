@@ -415,6 +415,7 @@
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { generateOntology, getProject, buildGraph, getTaskStatus, getGraphData } from '../api/graph'
+import { initializeDynamics } from '../api/dynamics'
 import { getPendingUpload, clearPendingUpload } from '../store/pendingUpload'
 import * as d3 from 'd3'
 
@@ -480,9 +481,19 @@ const goHome = () => {
   router.push('/')
 }
 
-const goToNextStep = () => {
-  // TODO: 进入环境搭建步骤
-  alert('环境搭建功能开发中...')
+const goToNextStep = async () => {
+  if (!graphData.value) {
+    error.value = '图谱尚未完成'
+    return
+  }
+  try {
+    // Initialize dynamics graph from the Zep graph data
+    const result = await initializeDynamics(graphData.value, projectData.value?.ontology)
+    // Navigate to DynamicsView with the new sim_id
+    router.push({ name: 'Dynamics', params: { simId: result.sim_id } })
+  } catch (e) {
+    error.value = `初始化动态模拟失败: ${e.message || e}`
+  }
 }
 
 const toggleFullScreen = () => {
