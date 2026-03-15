@@ -16,7 +16,7 @@ from typing import Dict, Any, List, Optional, Callable
 from dataclasses import dataclass, field, asdict
 from datetime import datetime
 
-from openai import OpenAI
+import anthropic
 
 from ..config import Config
 from ..utils.logger import get_logger
@@ -228,16 +228,12 @@ class SimulationConfigGenerator:
         model_name: Optional[str] = None
     ):
         self.api_key = api_key or Config.LLM_API_KEY
-        self.base_url = base_url or Config.LLM_BASE_URL
         self.model_name = model_name or Config.LLM_MODEL_NAME
-        
+
         if not self.api_key:
-            raise ValueError("LLM_API_KEY 未配置")
-        
-        self.client = OpenAI(
-            api_key=self.api_key,
-            base_url=self.base_url
-        )
+            raise ValueError("ANTHROPIC_API_KEY not configured")
+
+        self.client = anthropic.Anthropic(api_key=self.api_key)
     
     def generate_config(
         self,
@@ -369,7 +365,7 @@ class SimulationConfigGenerator:
             twitter_config=twitter_config,
             reddit_config=reddit_config,
             llm_model=self.model_name,
-            llm_base_url=self.base_url,
+            llm_base_url="",
             generation_reasoning=" | ".join(reasoning_parts)
         )
         
@@ -431,53 +427,57 @@ class SimulationConfigGenerator:
         return "\n".join(lines)
     
     def _call_llm_with_retry(self, prompt: str, system_prompt: str) -> Dict[str, Any]:
-        """带重试的LLM调用，包含JSON修复逻辑"""
+        """LLM call with retry and JSON repair logic."""
         import re
-        
+
         max_attempts = 3
         last_error = None
-        
+
+        json_system = (
+            system_prompt
+            + "\n\nYou must respond with valid JSON only. "
+            "Do not include markdown code fences or any other text."
+        )
+
         for attempt in range(max_attempts):
             try:
-                response = self.client.chat.completions.create(
+                response = self.client.messages.create(
                     model=self.model_name,
-                    messages=[
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": prompt}
-                    ],
-                    response_format={"type": "json_object"},
-                    temperature=0.7 - (attempt * 0.1)  # 每次重试降低温度
-                    # 不设置max_tokens，让LLM自由发挥
+                    system=json_system,
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=0.7 - (attempt * 0.1),
+                    max_tokens=8192,
                 )
-                
-                content = response.choices[0].message.content
-                finish_reason = response.choices[0].finish_reason
-                
-                # 检查是否被截断
-                if finish_reason == 'length':
-                    logger.warning(f"LLM输出被截断 (attempt {attempt+1})")
+
+                content = response.content[0].text
+                stop_reason = response.stop_reason
+
+                if stop_reason == "max_tokens":
+                    logger.warning(f"LLM output truncated (attempt {attempt+1})")
                     content = self._fix_truncated_json(content)
-                
-                # 尝试解析JSON
+
+                # Clean markdown wrappers
+                content = re.sub(r'^```(?:json)?\s*\n?', '', content.strip(), flags=re.IGNORECASE)
+                content = re.sub(r'\n?```\s*$', '', content)
+
                 try:
                     return json.loads(content)
                 except json.JSONDecodeError as e:
-                    logger.warning(f"JSON解析失败 (attempt {attempt+1}): {str(e)[:80]}")
-                    
-                    # 尝试修复JSON
+                    logger.warning(f"JSON parse failed (attempt {attempt+1}): {str(e)[:80]}")
+
                     fixed = self._try_fix_config_json(content)
                     if fixed:
                         return fixed
-                    
+
                     last_error = e
-                    
+
             except Exception as e:
-                logger.warning(f"LLM调用失败 (attempt {attempt+1}): {str(e)[:80]}")
+                logger.warning(f"LLM call failed (attempt {attempt+1}): {str(e)[:80]}")
                 last_error = e
                 import time
                 time.sleep(2 * (attempt + 1))
-        
-        raise last_error or Exception("LLM调用失败")
+
+        raise last_error or Exception("LLM call failed")
     
     def _fix_truncated_json(self, content: str) -> str:
         """修复被截断的JSON"""

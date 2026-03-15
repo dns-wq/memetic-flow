@@ -27,10 +27,9 @@ class Config:
     # JSON配置 - 禁用ASCII转义，让中文直接显示（而不是 \uXXXX 格式）
     JSON_AS_ASCII = False
     
-    # LLM配置（统一使用OpenAI格式）
-    LLM_API_KEY = os.environ.get('LLM_API_KEY')
-    LLM_BASE_URL = os.environ.get('LLM_BASE_URL', 'https://api.openai.com/v1')
-    LLM_MODEL_NAME = os.environ.get('LLM_MODEL_NAME', 'gpt-4o-mini')
+    # LLM configuration (Anthropic Claude API)
+    LLM_API_KEY = os.environ.get('ANTHROPIC_API_KEY')
+    LLM_MODEL_NAME = os.environ.get('LLM_MODEL_NAME', 'claude-sonnet-4-6')
     
     # Zep配置
     ZEP_API_KEY = os.environ.get('ZEP_API_KEY')
@@ -58,6 +57,11 @@ class Config:
         'TREND', 'REFRESH', 'DO_NOTHING', 'FOLLOW', 'MUTE'
     ]
     
+    # OASIS text analysis (LLM-informed dynamics)
+    OASIS_TEXT_ANALYSIS_ENABLED = os.environ.get('OASIS_TEXT_ANALYSIS_ENABLED', 'false').lower() == 'true'
+    OASIS_TEXT_ANALYSIS_MODEL = os.environ.get('OASIS_TEXT_ANALYSIS_MODEL', '')  # empty = use default LLM_MODEL_NAME
+    OASIS_TEXT_ANALYSIS_CACHE_SIZE = int(os.environ.get('OASIS_TEXT_ANALYSIS_CACHE_SIZE', '256'))
+
     # Report Agent配置
     REPORT_AGENT_MAX_TOOL_CALLS = int(os.environ.get('REPORT_AGENT_MAX_TOOL_CALLS', '5'))
     REPORT_AGENT_MAX_REFLECTION_ROUNDS = int(os.environ.get('REPORT_AGENT_MAX_REFLECTION_ROUNDS', '2'))
@@ -68,7 +72,7 @@ class Config:
         """验证必要配置"""
         errors = []
         if not cls.LLM_API_KEY:
-            errors.append("LLM_API_KEY 未配置")
+            errors.append("ANTHROPIC_API_KEY not configured")
         if not cls.ZEP_API_KEY:
             errors.append("ZEP_API_KEY 未配置")
         return errors
