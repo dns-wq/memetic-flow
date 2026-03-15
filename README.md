@@ -1,203 +1,338 @@
 <div align="center">
 
-<img src="./static/image/MiroFish_logo_compressed.jpeg" alt="MiroFish Logo" width="75%"/>
+# Memetic Flow
 
-<a href="https://trendshift.io/repositories/16144" target="_blank"><img src="https://trendshift.io/api/badge/repositories/16144" alt="666ghj%2FMiroFish | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+**A physics engine for ideas.**
 
-简洁通用的群体智能引擎，预测万物
-</br>
-<em>A Simple and Universal Swarm Intelligence Engine, Predicting Anything</em>
+*Transform documents into living simulations — watch institutions emerge, ideas compete, ecosystems evolve, and markets form through dynamical equations grounded in complexity science.*
 
-<a href="https://www.shanda.com/" target="_blank"><img src="./static/image/shanda_logo.png" alt="666ghj%2MiroFish | Shanda" height="40"/></a>
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg?style=flat-square)](LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![Vue 3](https://img.shields.io/badge/Vue-3-4FC08D?style=flat-square&logo=vue.js&logoColor=white)](https://vuejs.org)
+[![D3.js](https://img.shields.io/badge/D3.js-Force_Graph-F9A03C?style=flat-square&logo=d3.js&logoColor=white)](https://d3js.org)
+[![Claude API](https://img.shields.io/badge/Claude-API-cc785c?style=flat-square&logo=anthropic&logoColor=white)](https://docs.anthropic.com)
 
-[![GitHub Stars](https://img.shields.io/github/stars/666ghj/MiroFish?style=flat-square&color=DAA520)](https://github.com/666ghj/MiroFish/stargazers)
-[![GitHub Watchers](https://img.shields.io/github/watchers/666ghj/MiroFish?style=flat-square)](https://github.com/666ghj/MiroFish/watchers)
-[![GitHub Forks](https://img.shields.io/github/forks/666ghj/MiroFish?style=flat-square)](https://github.com/666ghj/MiroFish/network)
-[![Docker](https://img.shields.io/badge/Docker-Build-2496ED?style=flat-square&logo=docker&logoColor=white)](https://hub.docker.com/)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/666ghj/MiroFish)
-
-[![Discord](https://img.shields.io/badge/Discord-Join-5865F2?style=flat-square&logo=discord&logoColor=white)](https://discord.com/channels/1469200078932545606/1469201282077163739)
-[![X](https://img.shields.io/badge/X-Follow-000000?style=flat-square&logo=x&logoColor=white)](https://x.com/mirofish_ai)
-[![Instagram](https://img.shields.io/badge/Instagram-Follow-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://www.instagram.com/mirofish_ai/)
-
-[English](./README-EN.md) | [中文文档](./README.md)
+[English](./README.md) | [简体中文](./README-CN.md) | [繁體中文](./README-TW.md) | [日本語](./README-JP.md)
 
 </div>
 
-## ⚡ 项目概述
+---
 
-**MiroFish** 是一款基于多智能体技术的新一代 AI 预测引擎。通过提取现实世界的种子信息（如突发新闻、政策草案、金融信号），自动构建出高保真的平行数字世界。在此空间内，成千上万个具备独立人格、长期记忆与行为逻辑的智能体进行自由交互与社会演化。你可透过「上帝视角」动态注入变量，精准推演未来走向——**让未来在数字沙盘中预演，助决策在百战模拟后胜出**。
+<div align="center">
+<img src="docs/screenshots/hero_force_graph.png" alt="Memetic Flow — 262 nodes self-organizing into institutions, trade networks, and norm clusters" width="100%"/>
+<br/><em>Civilization from Scratch — 262 agents self-organizing into institutions and trade networks</em>
+</div>
 
-> 你只需：上传种子材料（数据分析报告或者有趣的小说故事），并用自然语言描述预测需求</br>
-> MiroFish 将返回：一份详尽的预测报告，以及一个可深度交互的高保真数字世界
+<br/>
 
-### 我们的愿景
+<div align="center">
+<img src="docs/gifs/simulation_replay.gif" alt="Simulation replay — watch a civilization emerge over 400 timesteps" width="80%"/>
+<br/><em>Watch a civilization emerge over 400 timesteps — institutions form, norms spread, trade routes crystallize</em>
+</div>
 
-MiroFish 致力于打造映射现实的群体智能镜像，通过捕捉个体互动引发的群体涌现，突破传统预测的局限：
+---
 
-- **于宏观**：我们是决策者的预演实验室，让政策与公关在零风险中试错
-- **于微观**：我们是个人用户的创意沙盘，无论是推演小说结局还是探索脑洞，皆可有趣、好玩、触手可及
+## What is Memetic Flow?
 
-从严肃预测到趣味仿真，我们让每一个如果都能看见结果，让预测万物成为可能。
+Memetic Flow is a **unified dynamical simulation engine** built on top of the [MiroFish](https://github.com/666ghj/MiroFish) multi-agent framework. Where MiroFish simulates agent conversations, Memetic Flow adds **explicit mathematical dynamics** — diffusion equations, replicator dynamics, opinion models, resource competition, and feedback loops — all running on typed graphs with directed edges.
 
-## 🌐 在线体验
+Upload a document. The system extracts entities and relationships into a typed graph. Choose a simulation mode. Watch complex systems emerge through equations grounded in network science, evolutionary game theory, and complexity research.
 
-欢迎访问在线 Demo 演示环境，体验我们为你准备的一次关于热点舆情事件的推演预测：[mirofish-live-demo](https://666ghj.github.io/mirofish-demo/)
+**Key differences from MiroFish:**
 
-## 📸 系统截图
+| | MiroFish | Memetic Flow |
+|---|---|---|
+| **Dynamics** | LLM agents chatting | Mathematical template equations |
+| **Structure** | Free-form text interactions | Typed graph with 5 node types, 6 edge types |
+| **Output** | Narratives and reports | Reproducible trajectories + metrics |
+| **Measurement** | Qualitative | Quantitative (entropy, Gini, polarization, etc.) |
+| **Visualization** | Chat logs | D3.js force graph with animated particle flows |
+| **Text understanding** | Drives agent behavior only | LLM analysis feeds back into the math |
+
+---
+
+## Key Features
+
+### LLM-Informed Mathematical Dynamics
+
+The most novel feature: Memetic Flow uses Claude to analyze the *content* of agent social media posts, then feeds structured signals back into the mathematical equations. A thoughtful policy analysis and a flame war produce different dynamics — not because an LLM decided, but because sentiment, persuasiveness, and novelty scores modulate the transfer rates, edge weights, and energy flows in the underlying math.
+
+```
+Agent posts "AI will eliminate 40% of jobs within a decade"
+    │
+    ▼
+TextAnalyzer (Claude API)
+    │  sentiment: -0.6    persuasiveness: 0.8    novelty: 0.3
+    ▼
+Mathematical dynamics update:
+    • Influence gain: 0.02 + 0.8 × 0.08 = 0.084 (vs fixed 0.05)
+    • Conflict edge weight: 0.3 + 0.6 × 0.4 = 0.54
+    • Topic relevance → new edges to related idea nodes
+```
+
+### 9 Mathematical Template Families
+
+Explicit update equations, not LLM improvisation:
+
+| Template | Foundation | What It Computes |
+|---|---|---|
+| **Diffusion** | Network cascade models | Energy propagation along edges with decay |
+| **Opinion Dynamics** | Hegselmann-Krause model | Bounded-confidence belief updating |
+| **Evolutionary** | Replicator dynamics | Fitness-proportional idea competition |
+| **Resource Flow** | Lotka-Volterra equations | Logistic growth + competitive exclusion |
+| **Feedback Systems** | System dynamics (stocks & flows) | Circular causation with saturation |
+| **Contagion** | SIR/SEIR epidemiology | Compartmental state transitions |
+| **Game Theory** | Evolutionary game theory | Repeated games with imitation dynamics |
+| **Network Evolution** | Homophily models | Topology rewiring based on similarity |
+| **Memory Landscape** | Cultural evolution | Shared cultural memory with persistence and resonance |
+
+All templates have empirical priors from published research, so simulations produce reasonable dynamics out of the box.
+
+### Interactive Force Graph Visualization
+
+Canvas-rendered D3.js force graph with:
+- **Variable node sizing** — radius scales with energy, so important nodes stand out
+- **Variable charge** — high-energy nodes repel more, creating natural hierarchy
+- **Edge-type-aware layout** — membership edges create tight institutional clusters, influence edges allow loose coupling
+- **Animated particle flow** — colored particles stream along edges showing energy transfer direction and rate
+- **Rich tooltips** — hover any node to see its role, goals, description, and live state values
+- **Zoom, pan, drag** — full interactivity with zoom-to-fit on double-click
+
+### 10 System-Level Metrics + Phase Transition Detection
+
+Every simulation step computes:
+
+| Metric | What It Measures |
+|---|---|
+| **Idea Entropy** | Diversity of idea energy distribution (Shannon entropy) |
+| **Polarization Index** | Mean pairwise ideological distance |
+| **Clustering Coefficient** | Fraction of closed triplets (community structure) |
+| **Institutional Cohesion** | Average intra-institutional edge density |
+| **Resource Gini** | Inequality of resource distribution |
+| **Cascade Count** | Nodes with energy > 2x mean (active cascades) |
+| **Feedback Loop Strength** | Average weight of edges in feedback loops |
+| **Total Energy** | Sum of all node energies |
+| **Node / Edge Count** | Graph size tracking |
+
+The **Phase Transition Detector** monitors metric derivatives over sliding windows and flags abrupt regime changes — polarization spikes, institutional collapse, cascade events — as named events on the timeline.
+
+---
+
+## Screenshots
 
 <div align="center">
 <table>
 <tr>
-<td><img src="./static/image/Screenshot/运行截图1.png" alt="截图1" width="100%"/></td>
-<td><img src="./static/image/Screenshot/运行截图2.png" alt="截图2" width="100%"/></td>
+<td width="50%"><img src="docs/screenshots/hero_force_graph.png" alt="Civilization from Scratch"/><br/><em>Civilization from Scratch — 262 nodes</em></td>
+<td width="50%"><img src="docs/screenshots/hero_metrics_dashboard.png" alt="Social Media Regulation"/><br/><em>Social Media Regulation — polarization dynamics</em></td>
 </tr>
 <tr>
-<td><img src="./static/image/Screenshot/运行截图3.png" alt="截图3" width="100%"/></td>
-<td><img src="./static/image/Screenshot/运行截图4.png" alt="截图4" width="100%"/></td>
-</tr>
-<tr>
-<td><img src="./static/image/Screenshot/运行截图5.png" alt="截图5" width="100%"/></td>
-<td><img src="./static/image/Screenshot/运行截图6.png" alt="截图6" width="100%"/></td>
+<td><img src="docs/screenshots/hero_ai_startup.png" alt="AI Startup Ecosystem"/><br/><em>AI Startup Ecosystem — market competition</em></td>
+<td><img src="docs/screenshots/hero_ecosystem.png" alt="Ecosystem Collapse"/><br/><em>Ecosystem Collapse — 85 species food web</em></td>
 </tr>
 </table>
 </div>
 
-## 🎬 演示视频
+---
 
-### 1. 武汉大学舆情推演预测 + MiroFish项目讲解
+## Simulation Modes
 
-<div align="center">
-<a href="https://www.bilibili.com/video/BV1VYBsBHEMY/" target="_blank"><img src="./static/image/武大模拟演示封面.png" alt="MiroFish Demo Video" width="75%"/></a>
+8 simulation modes, each bundling specific templates, parameters, and visualization presets:
 
-点击图片查看使用微舆BettaFish生成的《武大舆情报告》进行预测的完整演示视频
-</div>
+| Mode | Templates | What It Models |
+|---|---|---|
+| **Synthetic Civilizations** | Diffusion, Opinion, Resource, Feedback | Institutional emergence, norm formation, trade networks |
+| **Digital Ecosystem of Minds** | Evolutionary, Diffusion, Resource | Cognitive ecology, attention competition, strategy selection |
+| **Memetic Physics** | Diffusion, Evolutionary, Feedback | Ideas as particles — energy, gravity wells, memetic selection |
+| **Market Dynamics** | Resource, Diffusion, Feedback | Competitive markets, supply chains, winner-takes-all |
+| **Public Discourse** | Opinion, Diffusion, Feedback | Polarization, coalition formation, echo chambers |
+| **Knowledge Ecosystems** | Diffusion, Evolutionary, Resource | Discovery, paradigm shifts, citation networks |
+| **Ecological Systems** | Resource, Evolutionary, Feedback | Species interactions, habitat collapse, tipping points |
+| **Custom** | Any combination | Manual template selection with full parameter control |
 
-### 2. 《红楼梦》失传结局推演预测
+---
 
-<div align="center">
-<a href="https://www.bilibili.com/video/BV1cPk3BBExq" target="_blank"><img src="./static/image/红楼梦模拟推演封面.jpg" alt="MiroFish Demo Video" width="75%"/></a>
+## Demo Scenarios
 
-点击图片查看基于《红楼梦》前80回数十万字，MiroFish深度预测失传结局
-</div>
+4 pre-run simulations are included — no API keys needed to explore:
 
-> **金融方向推演预测**、**时政要闻推演预测**等示例陆续更新中...
+| Demo | Mode | Nodes | Steps | What Happens |
+|---|---|---|---|---|
+| **Civilization from Scratch** | Synthetic Civ | 262 | 400 | Institutions, norms, and trade emerge from 200 agents in 5 geographic clusters |
+| **Social Media Regulation** | Public Discourse | 178 | 250 | Pro/anti regulation factions polarize; moderates get pulled to extremes |
+| **AI Startup Ecosystem** | Market Dynamics | 120 | 250 | 80 startups compete across 8 sectors; VCs drive winner-takes-all concentration |
+| **Ecosystem Collapse** | Ecological | 85 | 400 | Cascading species endangerment when keystone resources degrade |
 
-## 🔄 工作流程
+Every agent in every demo has a **unique role and goals** — hover any node to see its individual persona, from "Irrigation engineer designing canal networks" to "Pearl diver retrieving pearls for luxury trade."
 
-1. **图谱构建**：现实种子提取 & 个体与群体记忆注入 & GraphRAG构建
-2. **环境搭建**：实体关系抽取 & 人设生成 & 环境配置Agent注入仿真参数
-3. **开始模拟**：双平台并行模拟 & 自动解析预测需求 & 动态更新时序记忆
-4. **报告生成**：ReportAgent拥有丰富的工具集与模拟后环境进行深度交互
-5. **深度互动**：与模拟世界中的任意一位进行对话 & 与ReportAgent进行对话
+Run the app and navigate to `/demo/{scenario_name}` to explore.
 
-## 🚀 快速开始
+---
 
-### 一、源码部署（推荐）
+## Architecture
 
-#### 前置要求
+```
+Document Upload
+       |
+       v
++---------------------+
+| Interpretation Layer |  Claude API: extract entities, relations, causal claims
+| (modified MiroFish)  |  -> typed graph primitives
++----------+----------+
+           v
++---------------------+
+|  Typed Graph Model   |  5 node types (Agent, Institution, Idea, Resource, Environment)
+|                      |  6 edge types (Influence, Information, Resource Flow, ...)
++----------+----------+
+           v
++---------------------------------------------+
+|           Simulation Engine                  |
+|  +----------+    +------------------------+  |
+|  |  OASIS   |<-->| 9 Template Families    |  |
+|  | (agents) |    | (explicit equations)   |  |
+|  +----------+    +----+-------------------+  |
+|       |               |                      |
+|  +----v----+    +-----v--------+             |
+|  |  Text   |    | TextAnalyzer |             |
+|  | actions |    | (Claude API) |             |
+|  +---------+    | sentiment,   |             |
+|                 | persuasive,  |             |
+|                 | novelty      |             |
+|                 +--------------+             |
++-----------+---------------------+------------+
+            v                     v
++---------------------+  +------------------+
+| Measurement Layer   |  | Visualization    |
+| 10 metrics tracked  |  | D3.js force graph|
+| Phase transition    |  | Particle flow    |
+| detection           |  | Temporal replay  |
++---------------------+  | Metrics dashboard|
+                          +------------------+
+```
 
-| 工具 | 版本要求 | 说明 | 安装检查 |
-|------|---------|------|---------|
-| **Node.js** | 18+ | 前端运行环境，包含 npm | `node -v` |
-| **Python** | ≥3.11, ≤3.12 | 后端运行环境 | `python --version` |
-| **uv** | 最新版 | Python 包管理器 | `uv --version` |
+See [`docs/diagrams/architecture.mmd`](docs/diagrams/architecture.mmd) for the full Mermaid diagram.
 
-#### 1. 配置环境变量
+---
+
+## Quick Start
+
+### Prerequisites
+
+| Tool | Version | Check |
+|---|---|---|
+| **Node.js** | 18+ | `node -v` |
+| **Python** | 3.11-3.12 | `python3 --version` |
+| **uv** | Latest | `uv --version` |
+
+### 1. Configure environment
 
 ```bash
-# 复制示例配置文件
 cp .env.example .env
-
-# 编辑 .env 文件，填入必要的 API 密钥
+# Edit .env -- set ANTHROPIC_API_KEY (for document interpretation)
+# Demos work without any API key
 ```
 
-**必需的环境变量：**
-
-```env
-# LLM API配置（支持 OpenAI SDK 格式的任意 LLM API）
-# 推荐使用阿里百炼平台qwen-plus模型：https://bailian.console.aliyun.com/
-# 注意消耗较大，可先进行小于40轮的模拟尝试
-LLM_API_KEY=your_api_key
-LLM_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
-LLM_MODEL_NAME=qwen-plus
-
-# Zep Cloud 配置
-# 每月免费额度即可支撑简单使用：https://app.getzep.com/
-ZEP_API_KEY=your_zep_api_key
-```
-
-#### 2. 安装依赖
+### 2. Install dependencies
 
 ```bash
-# 一键安装所有依赖（根目录 + 前端 + 后端）
 npm run setup:all
 ```
 
-或者分步安装：
+### 3. Start
 
 ```bash
-# 安装 Node 依赖（根目录 + 前端）
-npm run setup
-
-# 安装 Python 依赖（后端，自动创建虚拟环境）
-npm run setup:backend
-```
-
-#### 3. 启动服务
-
-```bash
-# 同时启动前后端（在项目根目录执行）
 npm run dev
 ```
 
-**服务地址：**
-- 前端：`http://localhost:3000`
-- 后端 API：`http://localhost:5001`
+- Frontend: `http://localhost:3000`
+- Backend API: `http://localhost:5001`
+- Demos: `http://localhost:3000/demo/civilization_from_scratch`
 
-**单独启动：**
-
-```bash
-npm run backend   # 仅启动后端
-npm run frontend  # 仅启动前端
-```
-
-### 二、Docker 部署
+### Docker
 
 ```bash
-# 1. 配置环境变量（同源码部署）
 cp .env.example .env
-
-# 2. 拉取镜像并启动
 docker compose up -d
 ```
 
-默认会读取根目录下的 `.env`，并映射端口 `3000（前端）/5001（后端）`
+---
 
-> 在 `docker-compose.yml` 中已通过注释提供加速镜像地址，可按需替换
+## Project Structure
 
-## 📬 更多交流
+```
+backend/app/
+  dynamics/          # Typed graph data model (nodes, edges, snapshots)
+  engine/
+    templates/       # 9 mathematical template families
+    runner.py        # Simulation orchestrator
+    oasis_bridge.py  # OASIS agent actions -> graph updates
+    text_analyzer.py # LLM content analysis -> structured signals
+  modes/             # 8 simulation modes (7 curated + custom)
+  metrics/           # Metric computation + phase transition detection
+  api/dynamics.py    # REST API endpoints
 
-<div align="center">
-<img src="./static/image/QQ群.png" alt="QQ交流群" width="60%"/>
-</div>
+frontend/src/
+  components/
+    DynamicsGraphPanel.vue   # D3.js canvas force graph + particles
+    MetricsDashboard.vue     # Time-series metric charts
+    TemporalSlider.vue       # Timeline scrubber with events
+  views/
+    DemoView.vue             # Pre-run demo viewer
 
-&nbsp;
+demo/
+  data/              # Pre-generated simulation data (JSON)
+  generators/        # Demo scenario definitions
+```
 
-MiroFish团队长期招募全职/实习，如果你对多Agent应用感兴趣，欢迎投递简历至：**mirofish@shanda.com**
+---
 
-## 📄 致谢
+## API Reference
 
-**MiroFish 得到了盛大集团的战略支持和孵化！**
+```
+POST   /api/dynamics/initialize              Create dynamics graph from project
+GET    /api/dynamics/graph/<sim_id>           Current graph state
+GET    /api/dynamics/snapshot/<sim_id>/<ts>   Historical snapshot at timestep
+GET    /api/dynamics/templates                Available templates
+POST   /api/dynamics/configure               Set templates + parameters
+GET    /api/dynamics/parameters/<template>    Parameter specs + priors
+POST   /api/dynamics/start                   Start simulation
+POST   /api/dynamics/stop                    Stop simulation
+GET    /api/dynamics/status/<sim_id>          Simulation progress
+GET    /api/dynamics/metrics/<sim_id>         Metric time series
+GET    /api/dynamics/events/<sim_id>          Phase transition events
+POST   /api/dynamics/inject-event            Manual parameter shock
+GET    /api/dynamics/demos                   List demo scenarios
+POST   /api/dynamics/demo/<name>/load        Load pre-run demo
+```
 
-MiroFish 的仿真引擎由 **[OASIS](https://github.com/camel-ai/oasis)** 驱动，我们衷心感谢 CAMEL-AI 团队的开源贡献！
+---
 
-## 📈 项目统计
+## Intellectual Foundations
 
-<a href="https://www.star-history.com/#666ghj/MiroFish&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=666ghj/MiroFish&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=666ghj/MiroFish&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=666ghj/MiroFish&type=date&legend=top-left" />
- </picture>
-</a>
+Memetic Flow draws on:
+
+- **Network Science** — Barabasi (scale-free networks), Watts & Strogatz (small worlds)
+- **Opinion Dynamics** — Hegselmann-Krause (bounded confidence), DeGroot (consensus)
+- **Evolutionary Game Theory** — Maynard Smith (ESS), Nowak (evolutionary dynamics on graphs)
+- **System Dynamics** — Forrester (stocks and flows), Meadows (leverage points)
+- **Memetics** — Dawkins (The Selfish Gene), Blackmore (The Meme Machine)
+- **Complexity Science** — Holland (emergence), Kauffman (self-organization)
+- **Ecological Modeling** — Lotka-Volterra (predator-prey), May (stability and complexity)
+- **Institutional Economics** — North (institutions as rules), Ostrom (collective action)
+
+---
+
+## Acknowledgments
+
+Memetic Flow is a fork of **[MiroFish](https://github.com/666ghj/MiroFish)** by the MiroFish team at Shanda Group. The OASIS multi-agent simulation engine is by **[CAMEL-AI](https://github.com/camel-ai/oasis)**.
+
+We retain the original AGPL-3.0 license and gratefully acknowledge these foundational projects.
+
+---
+
+## License
+
+[AGPL-3.0](LICENSE) — same as MiroFish.
+
+Memetic Flow additions are copyright their respective contributors.
+Original MiroFish code is copyright the MiroFish team / Shanda Group.

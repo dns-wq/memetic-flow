@@ -1,0 +1,86 @@
+%%{init: {'theme': 'dark', 'themeVariables': {'primaryColor': '#1f6feb', 'primaryTextColor': '#e6edf3', 'primaryBorderColor': '#30363d', 'lineColor': '#484f58', 'secondaryColor': '#238636', 'tertiaryColor': '#161b22', 'background': '#0d1117', 'mainBkg': '#161b22', 'nodeBorder': '#30363d', 'clusterBkg': '#161b22', 'clusterBorder': '#21262d', 'titleColor': '#e6edf3', 'edgeLabelBackground': '#0d1117'}}}%%
+
+graph TB
+    subgraph INPUT["Document Upload"]
+        DOC[/"Documents<br/>(PDF, Text, URL)"/]
+    end
+
+    subgraph INTERPRET["Interpretation Layer"]
+        ONT["Ontology Generator<br/><small>Claude API</small>"]
+        INIT["Dynamics Initializer<br/><small>Entity → Typed Graph</small>"]
+    end
+
+    subgraph GRAPH["Typed Graph Model"]
+        NODES["Nodes<br/><small>Agent | Institution | Idea<br/>Resource | Environment</small>"]
+        EDGES["Directed Edges<br/><small>Influence | Information<br/>Resource Flow | Conflict<br/>Cooperation | Membership</small>"]
+        STATE["State Vectors<br/><small>Energy, Resources, Influence<br/>Ideology, Mutation Rate</small>"]
+    end
+
+    subgraph ENGINE["Simulation Engine"]
+        direction LR
+        subgraph TEMPLATES["9 Template Families"]
+            T1["Diffusion"]
+            T2["Opinion"]
+            T3["Evolutionary"]
+            T4["Resource"]
+            T5["Feedback"]
+            T6["Contagion"]
+            T7["Game Theory"]
+            T8["Network Evolution"]
+            T9["Memory Landscape"]
+        end
+        RUNNER["Engine Runner<br/><small>Step → Apply Templates<br/>→ Compute Metrics → Snapshot</small>"]
+        BRIDGE["OASIS Bridge<br/><small>Agent Actions → Graph Updates</small>"]
+    end
+
+    subgraph MODES["7 Simulation Modes"]
+        M1["Synthetic Civilizations"]
+        M2["Digital Ecosystem"]
+        M3["Memetic Physics"]
+        M4["Market Dynamics"]
+        M5["Public Discourse"]
+        M6["Knowledge Ecosystems"]
+        M7["Ecological Systems"]
+    end
+
+    subgraph METRICS["Measurement Layer"]
+        COLLECT["Metrics Collector<br/><small>Entropy, Polarization, Gini<br/>Clustering, Cascade Count<br/>Cohesion, Loop Strength</small>"]
+        DETECT["Phase Transition<br/>Detector"]
+    end
+
+    subgraph VIS["Visualization"]
+        D3["D3.js Force Graph<br/><small>Canvas Rendering<br/>Animated Particle Flows<br/>Zoom/Pan/Drag</small>"]
+        TIMELINE["Temporal Slider<br/><small>Replay History</small>"]
+        DASHBOARD["Metrics Dashboard<br/><small>Time-Series Charts</small>"]
+        EXPORT["Export<br/><small>JSON | CSV</small>"]
+    end
+
+    DOC --> ONT
+    ONT --> INIT
+    INIT --> NODES
+    NODES --- EDGES
+    EDGES --- STATE
+    NODES --> RUNNER
+    RUNNER --> COLLECT
+    COLLECT --> DETECT
+    MODES -.->|configure| RUNNER
+    TEMPLATES --> RUNNER
+    BRIDGE -.->|sync| RUNNER
+    RUNNER --> D3
+    DETECT --> TIMELINE
+    COLLECT --> DASHBOARD
+    RUNNER --> EXPORT
+
+    classDef inputNode fill:#1f3a5f,stroke:#58a6ff,color:#e6edf3
+    classDef engineNode fill:#1a4731,stroke:#3fb950,color:#e6edf3
+    classDef modeNode fill:#3d2b00,stroke:#e5a844,color:#e6edf3
+    classDef metricNode fill:#3d1f3d,stroke:#9b6ec6,color:#e6edf3
+    classDef visNode fill:#3d1f1f,stroke:#e8814d,color:#e6edf3
+
+    class DOC inputNode
+    class ONT,INIT inputNode
+    class NODES,EDGES,STATE engineNode
+    class T1,T2,T3,T4,T5,T6,T7,T8,T9,RUNNER,BRIDGE engineNode
+    class M1,M2,M3,M4,M5,M6,M7 modeNode
+    class COLLECT,DETECT metricNode
+    class D3,TIMELINE,DASHBOARD,EXPORT visNode
