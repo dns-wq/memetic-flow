@@ -22,7 +22,10 @@ class KnowledgeEcosystemsMode(SimulationMode):
     )
     icon = "flask"
     required_templates = ["diffusion", "evolutionary", "resource"]
-    optional_templates = ["feedback", "opinion"]
+    optional_templates = [
+        "feedback", "opinion", "knowledge_production", "peer_review",
+        "paradigm", "memory_landscape",
+    ]
     default_params = {
         "diffusion": {"transfer_rate": 0.04, "decay_rate": 0.005, "threshold": 0.1},
         "evolutionary": {
@@ -31,6 +34,9 @@ class KnowledgeEcosystemsMode(SimulationMode):
             "carrying_capacity": 200.0,
         },
         "resource": {"growth_rate": 0.03, "flow_rate": 0.08},
+        "knowledge_production": {"discovery_probability": 0.01, "collaboration_bonus": 0.1},
+        "peer_review": {"reviewer_accuracy": 0.8, "replication_rate": 0.02},
+        "paradigm": {"anomaly_accumulation_rate": 0.05, "crisis_threshold": 5.0},
     }
     visualization_preset = "force"
     metrics_focus = [

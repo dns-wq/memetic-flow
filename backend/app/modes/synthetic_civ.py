@@ -27,12 +27,18 @@ class SyntheticCivMode(SimulationMode):
     )
     icon = "castle"
     required_templates = ["diffusion", "opinion", "resource", "feedback"]
-    optional_templates = ["evolutionary"]
+    optional_templates = [
+        "evolutionary", "institutional", "norms", "innovation",
+        "contagion", "game_theory", "network_evolution",
+    ]
     default_params = {
         "diffusion": {"transfer_rate": 0.04, "decay_rate": 0.005},
         "opinion": {"tolerance": 0.35, "convergence_rate": 0.08},
         "resource": {"growth_rate": 0.03, "competition_coefficient": 0.02},
         "feedback": {"flow_coefficient": 0.12},
+        "institutional": {"formation_threshold": 0.6, "cohesion_decay": 0.005},
+        "norms": {"conformity_threshold": 0.5, "norm_stability_bonus": 0.1},
+        "innovation": {"innovation_rate": 0.005, "adoption_advantage": 0.2},
     }
     visualization_preset = "force"
     metrics_focus = [

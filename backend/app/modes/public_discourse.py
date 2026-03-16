@@ -21,7 +21,10 @@ class PublicDiscourseMode(SimulationMode):
     )
     icon = "megaphone"
     required_templates = ["opinion", "diffusion", "feedback"]
-    optional_templates = ["evolutionary", "resource"]
+    optional_templates = [
+        "evolutionary", "resource", "electoral", "coalition",
+        "deliberation", "network_evolution",
+    ]
     default_params = {
         "opinion": {
             "tolerance": 0.25,
@@ -30,6 +33,9 @@ class PublicDiscourseMode(SimulationMode):
         },
         "diffusion": {"transfer_rate": 0.05, "decay_rate": 0.005},
         "feedback": {"flow_coefficient": 0.1},
+        "electoral": {"strategic_voting_rate": 0.1, "identity_weight": 0.3},
+        "coalition": {"coalition_benefit_multiplier": 1.5, "defection_temptation": 0.3},
+        "deliberation": {"evidence_weight": 0.5, "confirmation_bias": 0.3},
     }
     visualization_preset = "force"
     metrics_focus = [

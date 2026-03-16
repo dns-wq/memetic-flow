@@ -22,7 +22,10 @@ class EcologicalSystemsMode(SimulationMode):
     )
     icon = "leaf"
     required_templates = ["resource", "evolutionary", "feedback"]
-    optional_templates = ["diffusion"]
+    optional_templates = [
+        "diffusion", "population_ecology", "habitat",
+        "ecosystem_services", "contagion",
+    ]
     default_params = {
         "resource": {
             "growth_rate": 0.06,
@@ -36,6 +39,9 @@ class EcologicalSystemsMode(SimulationMode):
             "carrying_capacity": 100.0,
         },
         "feedback": {"flow_coefficient": 0.08, "saturation_limit": 20.0},
+        "population_ecology": {"birth_rate": 0.1, "death_rate": 0.05, "predation_rate": 0.02},
+        "habitat": {"degradation_rate": 0.01, "restoration_rate": 0.005},
+        "ecosystem_services": {"biodiversity_threshold": 0.3, "service_sensitivity": 1.0},
     }
     visualization_preset = "force"
     metrics_focus = [

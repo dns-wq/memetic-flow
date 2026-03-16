@@ -99,11 +99,13 @@ class TestTemplates:
         assert resp.status_code == 200
         body = resp.get_json()
         names = {t["name"] for t in body}
-        expected = {
+        # 9 core + 21 domain-specific = 30 templates
+        core = {
             "diffusion", "opinion", "evolutionary", "resource", "feedback",
             "contagion", "game_theory", "network_evolution", "memory_landscape",
         }
-        assert expected == names
+        assert core.issubset(names)
+        assert len(names) == 30
 
     def test_get_parameters(self, client):
         resp = client.get("/api/dynamics/parameters/diffusion")

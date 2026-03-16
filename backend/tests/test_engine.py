@@ -22,6 +22,34 @@ from app.engine.templates import (
     GameTheoryTemplate,
     NetworkEvolutionTemplate,
     MemoryLandscapeTemplate,
+    # Phase 9
+    InstitutionalTemplate,
+    NormsTemplate,
+    InnovationTemplate,
+    # Phase 10
+    CognitiveEcologyTemplate,
+    AttentionTemplate,
+    CognitiveTypesTemplate,
+    # Phase 11
+    MemeticFieldTemplate,
+    MemeticEnergyTemplate,
+    CulturalEvolutionTemplate,
+    # Phase 12
+    MarketClearingTemplate,
+    CompetitiveTemplate,
+    SupplyChainTemplate,
+    # Phase 13
+    ElectoralTemplate,
+    CoalitionTemplate,
+    DeliberationTemplate,
+    # Phase 14
+    KnowledgeProductionTemplate,
+    PeerReviewTemplate,
+    ParadigmTemplate,
+    # Phase 15
+    PopulationEcologyTemplate,
+    HabitatTemplate,
+    EcosystemServicesTemplate,
 )
 
 
@@ -48,6 +76,20 @@ class TestTemplateRegistry:
         assert set(TEMPLATE_REGISTRY.keys()) == {
             "diffusion", "opinion", "evolutionary", "resource", "feedback",
             "contagion", "game_theory", "network_evolution", "memory_landscape",
+            # Phase 9
+            "institutional", "norms", "innovation",
+            # Phase 10
+            "cognitive_ecology", "attention", "cognitive_types",
+            # Phase 11
+            "memetic_field", "memetic_energy", "cultural_evolution",
+            # Phase 12
+            "market_clearing", "competitive", "supply_chain",
+            # Phase 13
+            "electoral", "coalition", "deliberation",
+            # Phase 14
+            "knowledge_production", "peer_review", "paradigm",
+            # Phase 15
+            "population_ecology", "habitat", "ecosystem_services",
         }
 
     def test_instances_have_required_attrs(self):
@@ -666,3 +708,890 @@ class TestMemoryLandscape:
         }, rng)
 
         assert g.get_node("reader").state.energy > 1.0
+
+
+# ------------------------------------------------------------------
+# Institutional template (Phase 9)
+# ------------------------------------------------------------------
+
+class TestInstitutional:
+    def test_runs_and_updates_cooperation_scores(self):
+        g = DynamicsGraph()
+        g.add_node(_node("a1", NodeType.AGENT, energy=1.0))
+        g.add_node(_node("a2", NodeType.AGENT, energy=1.0))
+        g.add_node(_node("a3", NodeType.AGENT, energy=1.0))
+        g.add_node(_node("a4", NodeType.AGENT, energy=1.0))
+        g.add_edge(_edge("e12", "a1", "a2", EdgeType.COOPERATION))
+        g.add_edge(_edge("e13", "a1", "a3", EdgeType.COOPERATION))
+        g.add_edge(_edge("e23", "a2", "a3", EdgeType.COOPERATION))
+        g.add_edge(_edge("e34", "a3", "a4", EdgeType.COOPERATION))
+
+        t = InstitutionalTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+
+        # Cooperation scores should have been created
+        a1 = g.get_node("a1")
+        coop_keys = [k for k in a1.state.custom if k.startswith("coop_")]
+        assert len(coop_keys) > 0
+
+    def test_institution_forms_when_cooperation_high(self):
+        g = DynamicsGraph()
+        for i in range(4):
+            g.add_node(_node(f"a{i}", NodeType.AGENT, energy=1.0))
+        # Fully connect with cooperation edges
+        for i in range(4):
+            for j in range(i + 1, 4):
+                g.add_edge(_edge(f"c{i}{j}", f"a{i}", f"a{j}", EdgeType.COOPERATION))
+                g.add_edge(_edge(f"c{j}{i}", f"a{j}", f"a{i}", EdgeType.COOPERATION))
+
+        t = InstitutionalTemplate()
+        rng = np.random.default_rng(42)
+
+        # Pre-set high cooperation scores so formation threshold is met
+        for i in range(4):
+            a = g.get_node(f"a{i}")
+            for j in range(4):
+                if i != j:
+                    a.state.custom[f"coop_a{j}"] = 0.9
+
+        t.update(g, {"formation_threshold": 0.6}, rng)
+
+        # An institution should have been created
+        institutions = list(g.nodes_by_type(NodeType.INSTITUTION))
+        assert len(institutions) >= 1
+
+
+# ------------------------------------------------------------------
+# Norms template (Phase 9)
+# ------------------------------------------------------------------
+
+class TestNorms:
+    def test_runs_without_error(self):
+        g = DynamicsGraph()
+        g.add_node(_node("a1", NodeType.AGENT, energy=1.0))
+        g.add_node(_node("a2", NodeType.AGENT, energy=1.0))
+        norm = _node("norm1", NodeType.IDEA, stability=1.0)
+        norm.state.custom["is_norm"] = 1.0
+        g.add_node(norm)
+        g.add_edge(_edge("e1", "a1", "norm1", EdgeType.INFORMATION))
+        g.add_edge(_edge("e12", "a1", "a2", EdgeType.INFLUENCE))
+
+        t = NormsTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+        # Should not raise
+
+    def test_norm_adoption_spreads(self):
+        g = DynamicsGraph()
+        # 4 agents fully connected; 3 already adopt the norm
+        for i in range(4):
+            g.add_node(_node(f"a{i}", NodeType.AGENT, energy=1.0))
+        norm = _node("norm1", NodeType.IDEA, stability=1.0)
+        norm.state.custom["is_norm"] = 1.0
+        g.add_node(norm)
+        # a0, a1, a2 adopt the norm (have INFORMATION edges)
+        for i in range(3):
+            g.add_edge(_edge(f"adopt{i}", f"a{i}", "norm1", EdgeType.INFORMATION))
+        # Fully connect agents
+        for i in range(4):
+            for j in range(i + 1, 4):
+                g.add_edge(_edge(f"e{i}{j}", f"a{i}", f"a{j}", EdgeType.INFLUENCE))
+                g.add_edge(_edge(f"e{j}{i}", f"a{j}", f"a{i}", EdgeType.INFLUENCE))
+
+        t = NormsTemplate()
+        rng = np.random.default_rng(42)
+        # Low threshold so a3 adopts (3/3 of its neighbours hold the norm)
+        t.update(g, {"conformity_threshold": 0.5}, rng)
+
+        # a3 should now have an edge to norm1
+        edges_a3 = [e for e in g.edges.values() if e.source_id == "a3" and e.target_id == "norm1"]
+        assert len(edges_a3) > 0
+
+
+# ------------------------------------------------------------------
+# Innovation template (Phase 9)
+# ------------------------------------------------------------------
+
+class TestInnovation:
+    def test_runs_and_ages_innovations(self):
+        g = DynamicsGraph()
+        g.add_node(_node("a1", NodeType.AGENT, energy=1.0, resources=1.0))
+        idea = _node("idea1", NodeType.IDEA, energy=2.0)
+        idea.state.custom["innovation_age"] = 5.0
+        g.add_node(idea)
+        g.add_edge(_edge("e1", "a1", "idea1", EdgeType.INFORMATION))
+
+        t = InnovationTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+
+        assert g.get_node("idea1").state.custom["innovation_age"] == 6.0
+
+    def test_high_innovation_rate_creates_ideas(self):
+        g = DynamicsGraph()
+        for i in range(10):
+            g.add_node(_node(f"a{i}", NodeType.AGENT, energy=1.0, resources=1.0))
+
+        initial_ideas = len(list(g.nodes_by_type(NodeType.IDEA)))
+        t = InnovationTemplate()
+        rng = np.random.default_rng(42)
+        # Very high innovation rate
+        for _ in range(20):
+            t.update(g, {"innovation_rate": 0.5}, rng)
+
+        final_ideas = len(list(g.nodes_by_type(NodeType.IDEA)))
+        assert final_ideas > initial_ideas
+
+
+# ------------------------------------------------------------------
+# Cognitive ecology template (Phase 10)
+# ------------------------------------------------------------------
+
+class TestCognitiveEcology:
+    def test_phenotypes_initialized(self):
+        g = DynamicsGraph()
+        for i in range(5):
+            g.add_node(_node(f"a{i}", NodeType.AGENT, resources=2.0))
+        for i in range(5):
+            for j in range(i + 1, 5):
+                g.add_edge(_edge(f"e{i}{j}", f"a{i}", f"a{j}", EdgeType.INFLUENCE))
+
+        t = CognitiveEcologyTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+
+        a0 = g.get_node("a0")
+        assert "pheno_persuasion" in a0.state.custom
+        assert "pheno_learning" in a0.state.custom
+
+    def test_reproduction_when_resources_high(self):
+        g = DynamicsGraph()
+        g.add_node(_node("rich", NodeType.AGENT, resources=10.0, energy=1.0))
+        g.add_node(_node("other", NodeType.AGENT, resources=1.0, energy=1.0))
+        g.add_edge(_edge("e1", "rich", "other", EdgeType.INFLUENCE))
+
+        t = CognitiveEcologyTemplate()
+        rng = np.random.default_rng(42)
+
+        initial_count = len(list(g.nodes_by_type(NodeType.AGENT)))
+        t.update(g, {"reproduction_threshold": 5.0}, rng)
+
+        final_count = len(list(g.nodes_by_type(NodeType.AGENT)))
+        assert final_count > initial_count
+
+
+# ------------------------------------------------------------------
+# Attention template (Phase 10)
+# ------------------------------------------------------------------
+
+class TestAttention:
+    def test_attention_distributed(self):
+        g = DynamicsGraph()
+        g.add_node(_node("i1", NodeType.IDEA, energy=5.0))
+        g.add_node(_node("i2", NodeType.IDEA, energy=1.0))
+
+        t = AttentionTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {"total_attention_pool": 100.0}, rng)
+
+        i1 = g.get_node("i1")
+        i2 = g.get_node("i2")
+        assert "attention_share" in i1.state.custom
+        assert "attention_share" in i2.state.custom
+        # Higher energy idea should get more attention
+        assert i1.state.custom["attention_share"] > i2.state.custom["attention_share"]
+
+    def test_attention_age_increments(self):
+        g = DynamicsGraph()
+        g.add_node(_node("i1", NodeType.IDEA, energy=3.0))
+
+        t = AttentionTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+        t.update(g, {}, rng)
+
+        assert g.get_node("i1").state.custom["attention_age"] == 2.0
+
+
+# ------------------------------------------------------------------
+# Cognitive types template (Phase 10)
+# ------------------------------------------------------------------
+
+class TestCognitiveTypes:
+    def test_types_assigned(self):
+        g = DynamicsGraph()
+        for i in range(5):
+            g.add_node(_node(f"a{i}", NodeType.AGENT, energy=1.0, ideological_position=[0.5, 0.5]))
+        for i in range(5):
+            for j in range(i + 1, 5):
+                g.add_edge(_edge(f"e{i}{j}", f"a{i}", f"a{j}", EdgeType.INFLUENCE))
+
+        t = CognitiveTypesTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+
+        for i in range(5):
+            a = g.get_node(f"a{i}")
+            assert "cognitive_type" in a.state.custom
+            assert int(a.state.custom["cognitive_type"]) in (0, 1, 2, 3)
+
+    def test_positions_change(self):
+        g = DynamicsGraph()
+        g.add_node(_node("a0", NodeType.AGENT, energy=5.0, ideological_position=[0.2, 0.3]))
+        g.add_node(_node("a1", NodeType.AGENT, energy=1.0, ideological_position=[0.8, 0.7]))
+        g.add_edge(_edge("e01", "a0", "a1", EdgeType.INFLUENCE))
+        g.add_edge(_edge("e10", "a1", "a0", EdgeType.INFLUENCE))
+
+        t = CognitiveTypesTemplate()
+        rng = np.random.default_rng(42)
+
+        orig_pos = list(g.get_node("a1").state.ideological_position)
+        for _ in range(10):
+            t.update(g, {}, rng)
+
+        new_pos = g.get_node("a1").state.ideological_position
+        assert orig_pos != new_pos
+
+
+# ------------------------------------------------------------------
+# Memetic field template (Phase 11)
+# ------------------------------------------------------------------
+
+class TestMemeticField:
+    def test_agents_drift_toward_ideas(self):
+        g = DynamicsGraph()
+        g.add_node(_node("idea", NodeType.IDEA, energy=10.0, ideological_position=[0.8, 0.8]))
+        g.add_node(_node("agent", NodeType.AGENT, energy=1.0, ideological_position=[0.2, 0.2]))
+
+        t = MemeticFieldTemplate()
+        rng = np.random.default_rng(42)
+
+        orig_pos = list(g.get_node("agent").state.ideological_position)
+        for _ in range(5):
+            t.update(g, {"field_strength": 0.3, "conceptual_friction": 0.1}, rng)
+
+        new_pos = g.get_node("agent").state.ideological_position
+        # Agent should have drifted toward idea (0.8, 0.8)
+        assert new_pos[0] > orig_pos[0]
+        assert new_pos[1] > orig_pos[1]
+
+    def test_gravity_well_detected(self):
+        g = DynamicsGraph()
+        g.add_node(_node("idea", NodeType.IDEA, energy=10.0, ideological_position=[0.5, 0.5]))
+        # Place agents very close to the idea
+        for i in range(3):
+            g.add_node(_node(f"a{i}", NodeType.AGENT, energy=1.0,
+                             ideological_position=[0.5 + i * 0.01, 0.5]))
+
+        t = MemeticFieldTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {"field_strength": 0.1, "conceptual_friction": 0.5}, rng)
+
+        assert g.get_node("idea").state.custom.get("gravity_well_size", 0) >= 1
+
+
+# ------------------------------------------------------------------
+# Memetic energy template (Phase 11)
+# ------------------------------------------------------------------
+
+class TestMemeticEnergy:
+    def test_energy_approximately_conserved(self):
+        g = DynamicsGraph()
+        g.add_node(_node("i1", NodeType.IDEA, energy=30.0))
+        g.add_node(_node("i2", NodeType.IDEA, energy=30.0))
+        g.add_node(_node("i3", NodeType.IDEA, energy=40.0))
+
+        t = MemeticEnergyTemplate()
+        rng = np.random.default_rng(42)
+
+        for _ in range(10):
+            t.update(g, {"total_energy": 100.0, "injection_rate": 0.0, "dissipation_rate": 0.0}, rng)
+
+        total = sum(g.get_node(f"i{i}").state.energy for i in range(1, 4))
+        # Should stay near 100 with no injection/dissipation
+        assert 80.0 < total < 120.0
+
+    def test_high_fitness_gains_energy(self):
+        g = DynamicsGraph()
+        # i1 has many incoming edges (high fitness)
+        g.add_node(_node("i1", NodeType.IDEA, energy=5.0))
+        g.add_node(_node("i2", NodeType.IDEA, energy=5.0))
+        g.add_node(_node("a1", NodeType.AGENT, energy=1.0))
+        g.add_node(_node("a2", NodeType.AGENT, energy=1.0))
+        g.add_edge(_edge("e1", "a1", "i1", EdgeType.INFORMATION, weight=1.0))
+        g.add_edge(_edge("e2", "a2", "i1", EdgeType.INFORMATION, weight=1.0))
+
+        t = MemeticEnergyTemplate()
+        rng = np.random.default_rng(42)
+
+        e1_before = g.get_node("i1").state.energy
+        for _ in range(10):
+            t.update(g, {"total_energy": 100.0}, rng)
+
+        # i1 should have gained relative to i2
+        assert g.get_node("i1").state.energy > g.get_node("i2").state.energy
+
+
+# ------------------------------------------------------------------
+# Cultural evolution template (Phase 11)
+# ------------------------------------------------------------------
+
+class TestCulturalEvolution:
+    def test_runs_without_error(self):
+        g = DynamicsGraph()
+        idea = _node("idea1", NodeType.IDEA, energy=2.0, ideological_position=[0.5, 0.5])
+        g.add_node(idea)
+        g.add_node(_node("a1", NodeType.AGENT, energy=1.0))
+        g.add_node(_node("a2", NodeType.AGENT, energy=1.0))
+        g.add_edge(_edge("e1", "a1", "idea1", EdgeType.INFORMATION))
+        g.add_edge(_edge("e12", "a1", "a2", EdgeType.INFLUENCE))
+
+        t = CulturalEvolutionTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+
+        # Should have bootstrapped transmissibility
+        assert "transmissibility" in g.get_node("idea1").state.custom
+
+    def test_mutations_create_new_ideas(self):
+        g = DynamicsGraph()
+        idea = _node("idea1", NodeType.IDEA, energy=2.0, ideological_position=[0.5, 0.5])
+        g.add_node(idea)
+        for i in range(5):
+            g.add_node(_node(f"a{i}", NodeType.AGENT, energy=1.0))
+            g.add_edge(_edge(f"ei{i}", f"a{i}", "idea1", EdgeType.INFORMATION))
+        # Connect agents so they can transmit
+        for i in range(5):
+            for j in range(i + 1, 5):
+                g.add_edge(_edge(f"e{i}{j}", f"a{i}", f"a{j}", EdgeType.INFLUENCE))
+
+        t = CulturalEvolutionTemplate()
+        rng = np.random.default_rng(42)
+
+        initial_ideas = len(list(g.nodes_by_type(NodeType.IDEA)))
+        for _ in range(50):
+            t.update(g, {"mutation_rate": 0.5, "recombination_probability": 0.1}, rng)
+
+        final_ideas = len(list(g.nodes_by_type(NodeType.IDEA)))
+        assert final_ideas > initial_ideas
+
+
+# ------------------------------------------------------------------
+# Market clearing template (Phase 12)
+# ------------------------------------------------------------------
+
+class TestMarketClearing:
+    def test_runs_and_sets_market_price(self):
+        g = DynamicsGraph()
+        for i in range(4):
+            g.add_node(_node(f"a{i}", NodeType.AGENT, resources=5.0))
+
+        t = MarketClearingTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+
+        # Market price should have been set
+        a0 = g.get_node("a0")
+        assert "current_market_price" in a0.state.custom
+
+    def test_transactions_transfer_resources(self):
+        g = DynamicsGraph()
+        # Create explicit buyer and seller
+        buyer = _node("buyer", NodeType.AGENT, resources=10.0)
+        seller = _node("seller", NodeType.AGENT, resources=5.0)
+        g.add_node(buyer)
+        g.add_node(seller)
+
+        t = MarketClearingTemplate()
+        rng = np.random.default_rng(42)
+
+        # Force roles
+        g.get_node("buyer").state.custom["is_seller"] = 0.0
+        g.get_node("buyer").state.custom["reservation_price"] = 2.0
+        g.get_node("buyer").state.custom["inventory"] = 0.0
+        g.get_node("seller").state.custom["is_seller"] = 1.0
+        g.get_node("seller").state.custom["reservation_price"] = 0.5
+        g.get_node("seller").state.custom["inventory"] = 5.0
+        g.get_node("buyer").state.custom["market_price"] = 1.0
+
+        total_before = g.get_node("buyer").state.resources + g.get_node("seller").state.resources
+        for _ in range(5):
+            t.update(g, {"transaction_cost": 0.0}, rng)
+
+        # Resources should have shifted (buyer spends, seller earns)
+        buyer_r = g.get_node("buyer").state.resources
+        seller_r = g.get_node("seller").state.resources
+        # At least one of them should have changed
+        assert buyer_r != 10.0 or seller_r != 5.0
+
+
+# ------------------------------------------------------------------
+# Competitive template (Phase 12)
+# ------------------------------------------------------------------
+
+class TestCompetitive:
+    def test_market_share_initialized(self):
+        g = DynamicsGraph()
+        for i in range(3):
+            g.add_node(_node(f"firm{i}", NodeType.INSTITUTION, resources=5.0, influence=1.0))
+
+        t = CompetitiveTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+
+        for i in range(3):
+            firm = g.get_node(f"firm{i}")
+            assert "market_share" in firm.state.custom
+
+    def test_higher_quality_gains_share(self):
+        g = DynamicsGraph()
+        g.add_node(_node("strong", NodeType.INSTITUTION, resources=5.0, influence=3.0))
+        g.add_node(_node("weak", NodeType.INSTITUTION, resources=5.0, influence=0.1))
+
+        t = CompetitiveTemplate()
+        rng = np.random.default_rng(42)
+
+        for _ in range(20):
+            t.update(g, {"quality_weight": 1.0}, rng)
+
+        strong_share = g.get_node("strong").state.custom["market_share"]
+        weak_share = g.get_node("weak").state.custom["market_share"]
+        assert strong_share > weak_share
+
+
+# ------------------------------------------------------------------
+# Supply chain template (Phase 12)
+# ------------------------------------------------------------------
+
+class TestSupplyChain:
+    def test_resources_flow_downstream(self):
+        g = DynamicsGraph()
+        g.add_node(_node("supplier", NodeType.RESOURCE, resources=10.0))
+        g.add_node(_node("factory", NodeType.RESOURCE, resources=0.5))
+        g.add_edge(_edge("flow1", "supplier", "factory", EdgeType.RESOURCE_FLOW, weight=1.0))
+
+        t = SupplyChainTemplate()
+        rng = np.random.default_rng(42)
+
+        # Run enough steps for lead time to elapse and resources to arrive
+        for _ in range(10):
+            t.update(g, {"flow_capacity": 2.0, "lead_time": 1.0, "buffer_stock": 0.5}, rng)
+
+        # Factory should have received some resources
+        assert g.get_node("factory").state.resources > 0.5
+
+    def test_disruption_reduces_flow(self):
+        g = DynamicsGraph()
+        g.add_node(_node("src", NodeType.RESOURCE, resources=20.0))
+        g.add_node(_node("dst", NodeType.RESOURCE, resources=0.0))
+        g.add_edge(_edge("flow", "src", "dst", EdgeType.RESOURCE_FLOW, weight=1.0))
+
+        t = SupplyChainTemplate()
+        rng = np.random.default_rng(42)
+
+        # With very high disruption, less flow should arrive
+        for _ in range(10):
+            t.update(g, {
+                "flow_capacity": 2.0, "lead_time": 0.0, "buffer_stock": 0.0,
+                "disruption_probability": 0.0,
+            }, rng)
+        normal_flow = g.get_node("dst").state.resources
+
+        # Reset
+        g2 = DynamicsGraph()
+        g2.add_node(_node("src", NodeType.RESOURCE, resources=20.0))
+        g2.add_node(_node("dst", NodeType.RESOURCE, resources=0.0))
+        g2.add_edge(_edge("flow", "src", "dst", EdgeType.RESOURCE_FLOW, weight=1.0))
+
+        rng2 = np.random.default_rng(42)
+        for _ in range(10):
+            t.update(g2, {
+                "flow_capacity": 2.0, "lead_time": 0.0, "buffer_stock": 0.0,
+                "disruption_probability": 0.2,
+            }, rng2)
+        disrupted_flow = g2.get_node("dst").state.resources
+
+        assert normal_flow >= disrupted_flow
+
+
+# ------------------------------------------------------------------
+# Electoral template (Phase 13)
+# ------------------------------------------------------------------
+
+class TestElectoral:
+    def test_candidates_designated(self):
+        g = DynamicsGraph()
+        for i in range(10):
+            g.add_node(_node(f"a{i}", NodeType.AGENT, energy=1.0,
+                             influence=float(10 - i),
+                             ideological_position=[i * 0.1, 0.5]))
+
+        t = ElectoralTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+
+        candidates = [a for a in g.nodes.values()
+                      if a.state.custom.get("is_candidate", 0.0) >= 1.0]
+        assert len(candidates) >= 2
+
+    def test_election_produces_vote_shares(self):
+        g = DynamicsGraph()
+        # 2 candidates + 8 voters
+        for i in range(10):
+            g.add_node(_node(f"a{i}", NodeType.AGENT, energy=1.0,
+                             influence=1.0,
+                             ideological_position=[i * 0.1, 0.5]))
+        g.get_node("a0").state.custom["is_candidate"] = 1.0
+        g.get_node("a1").state.custom["is_candidate"] = 1.0
+
+        t = ElectoralTemplate()
+        rng = np.random.default_rng(42)
+        # Advance timestep to election interval
+        for _ in range(50):
+            g.advance_timestep()
+        t.update(g, {"election_interval": 50.0}, rng)
+
+        # Candidates should have vote_share
+        assert "vote_share" in g.get_node("a0").state.custom
+        assert "vote_share" in g.get_node("a1").state.custom
+
+
+# ------------------------------------------------------------------
+# Coalition template (Phase 13)
+# ------------------------------------------------------------------
+
+class TestCoalition:
+    def test_runs_and_initializes_ids(self):
+        g = DynamicsGraph()
+        for i in range(5):
+            g.add_node(_node(f"a{i}", NodeType.AGENT, resources=1.0,
+                             ideological_position=[0.5, 0.5]))
+
+        t = CoalitionTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+
+        for i in range(5):
+            assert "coalition_id" in g.get_node(f"a{i}").state.custom
+
+    def test_proximate_agents_form_coalition(self):
+        g = DynamicsGraph()
+        # 5 agents all at the same position, should form a coalition
+        for i in range(5):
+            g.add_node(_node(f"a{i}", NodeType.AGENT, resources=1.0,
+                             ideological_position=[0.5, 0.5]))
+
+        t = CoalitionTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {"minimum_viable_size": 3.0}, rng)
+
+        # At least 3 should share a coalition
+        ids = [int(g.get_node(f"a{i}").state.custom.get("coalition_id", -1)) for i in range(5)]
+        from collections import Counter
+        counts = Counter(i for i in ids if i >= 0)
+        assert any(c >= 3 for c in counts.values())
+
+
+# ------------------------------------------------------------------
+# Deliberation template (Phase 13)
+# ------------------------------------------------------------------
+
+class TestDeliberation:
+    def test_runs_and_shifts_positions(self):
+        g = DynamicsGraph()
+        g.add_node(_node("a0", NodeType.AGENT, energy=1.0, ideological_position=[0.2, 0.3]))
+        g.add_node(_node("a1", NodeType.AGENT, energy=1.0, ideological_position=[0.8, 0.7]))
+        g.add_edge(_edge("e01", "a0", "a1", EdgeType.INFLUENCE))
+        g.add_edge(_edge("e10", "a1", "a0", EdgeType.INFLUENCE))
+
+        t = DeliberationTemplate()
+        rng = np.random.default_rng(42)
+
+        orig_a0 = list(g.get_node("a0").state.ideological_position)
+        for _ in range(10):
+            t.update(g, {"confirmation_bias": 0.0, "engagement_selectivity": 0.0}, rng)
+
+        new_a0 = g.get_node("a0").state.ideological_position
+        # Positions should have shifted toward each other
+        assert new_a0[0] > orig_a0[0]
+
+    def test_high_confirmation_bias_limits_convergence(self):
+        g = DynamicsGraph()
+        g.add_node(_node("a0", NodeType.AGENT, energy=1.0, ideological_position=[0.1, 0.1]))
+        g.add_node(_node("a1", NodeType.AGENT, energy=1.0, ideological_position=[0.9, 0.9]))
+        g.add_edge(_edge("e01", "a0", "a1", EdgeType.INFLUENCE))
+        g.add_edge(_edge("e10", "a1", "a0", EdgeType.INFLUENCE))
+
+        t = DeliberationTemplate()
+
+        # Low bias run
+        g_low = DynamicsGraph()
+        g_low.add_node(_node("a0", NodeType.AGENT, energy=1.0, ideological_position=[0.1, 0.1]))
+        g_low.add_node(_node("a1", NodeType.AGENT, energy=1.0, ideological_position=[0.9, 0.9]))
+        g_low.add_edge(_edge("e01", "a0", "a1", EdgeType.INFLUENCE))
+        g_low.add_edge(_edge("e10", "a1", "a0", EdgeType.INFLUENCE))
+
+        rng_low = np.random.default_rng(42)
+        for _ in range(20):
+            t.update(g_low, {"confirmation_bias": 0.0, "engagement_selectivity": 0.0}, rng_low)
+
+        # High bias run
+        g_high = DynamicsGraph()
+        g_high.add_node(_node("a0", NodeType.AGENT, energy=1.0, ideological_position=[0.1, 0.1]))
+        g_high.add_node(_node("a1", NodeType.AGENT, energy=1.0, ideological_position=[0.9, 0.9]))
+        g_high.add_edge(_edge("e01", "a0", "a1", EdgeType.INFLUENCE))
+        g_high.add_edge(_edge("e10", "a1", "a0", EdgeType.INFLUENCE))
+
+        rng_high = np.random.default_rng(42)
+        for _ in range(20):
+            t.update(g_high, {"confirmation_bias": 0.9, "engagement_selectivity": 0.0}, rng_high)
+
+        # Convergence should be greater with low bias
+        low_dist = abs(
+            g_low.get_node("a0").state.ideological_position[0]
+            - g_low.get_node("a1").state.ideological_position[0]
+        )
+        high_dist = abs(
+            g_high.get_node("a0").state.ideological_position[0]
+            - g_high.get_node("a1").state.ideological_position[0]
+        )
+        assert low_dist <= high_dist
+
+
+# ------------------------------------------------------------------
+# Knowledge production template (Phase 14)
+# ------------------------------------------------------------------
+
+class TestKnowledgeProduction:
+    def test_runs_and_bootstraps_skill(self):
+        g = DynamicsGraph()
+        g.add_node(_node("r1", NodeType.AGENT, energy=1.0))
+        g.add_node(_node("r2", NodeType.AGENT, energy=1.0))
+        g.add_edge(_edge("e12", "r1", "r2", EdgeType.COOPERATION))
+
+        t = KnowledgeProductionTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+
+        assert "researcher_skill" in g.get_node("r1").state.custom
+
+    def test_high_discovery_rate_creates_ideas(self):
+        g = DynamicsGraph()
+        for i in range(5):
+            g.add_node(_node(f"r{i}", NodeType.AGENT, energy=1.0))
+        # Give them prerequisite ideas
+        for i in range(5):
+            for j in range(3):
+                idea_id = f"prereq_{i}_{j}"
+                g.add_node(_node(idea_id, NodeType.IDEA, energy=1.0))
+                g.add_edge(_edge(f"ep{i}{j}", f"r{i}", idea_id, EdgeType.INFORMATION))
+        # Connect researchers for collaboration
+        for i in range(5):
+            for j in range(i + 1, 5):
+                g.add_edge(_edge(f"c{i}{j}", f"r{i}", f"r{j}", EdgeType.COOPERATION))
+
+        t = KnowledgeProductionTemplate()
+        rng = np.random.default_rng(42)
+
+        initial_ideas = len(list(g.nodes_by_type(NodeType.IDEA)))
+        for _ in range(20):
+            t.update(g, {"discovery_probability": 0.5, "prerequisite_depth": 2.0}, rng)
+
+        final_ideas = len(list(g.nodes_by_type(NodeType.IDEA)))
+        assert final_ideas > initial_ideas
+
+
+# ------------------------------------------------------------------
+# Peer review template (Phase 14)
+# ------------------------------------------------------------------
+
+class TestPeerReview:
+    def test_runs_and_sets_review_status(self):
+        g = DynamicsGraph()
+        idea = _node("paper1", NodeType.IDEA, energy=2.0)
+        idea.state.custom["citation_count"] = 0.0
+        idea.state.custom["evidence_strength"] = 0.8
+        g.add_node(idea)
+
+        t = PeerReviewTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+
+        assert "review_status" in g.get_node("paper1").state.custom
+
+    def test_high_evidence_accepted(self):
+        g = DynamicsGraph()
+        idea = _node("good_paper", NodeType.IDEA, energy=1.0)
+        idea.state.custom["citation_count"] = 0.0
+        idea.state.custom["evidence_strength"] = 0.95
+        g.add_node(idea)
+
+        t = PeerReviewTemplate()
+        rng = np.random.default_rng(42)
+        # High accuracy reviewer should accept high-evidence paper
+        t.update(g, {"reviewer_accuracy": 0.99}, rng)
+
+        status = g.get_node("good_paper").state.custom["review_status"]
+        assert status == 1.0  # _ACCEPTED
+
+
+# ------------------------------------------------------------------
+# Paradigm template (Phase 14)
+# ------------------------------------------------------------------
+
+class TestParadigm:
+    def test_runs_and_bootstraps_anomalies(self):
+        g = DynamicsGraph()
+        par = _node("par1", NodeType.INSTITUTION, energy=5.0, stability=3.0)
+        g.add_node(par)
+
+        t = ParadigmTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+
+        assert "anomaly_count" in g.get_node("par1").state.custom
+        assert "is_paradigm" in g.get_node("par1").state.custom
+
+    def test_normal_science_boosts_members(self):
+        g = DynamicsGraph()
+        par = _node("paradigm1", NodeType.INSTITUTION, energy=5.0, stability=3.0)
+        par.state.custom["is_paradigm"] = 1.0
+        par.state.custom["anomaly_count"] = 0.0
+        g.add_node(par)
+
+        agent = _node("scientist", NodeType.AGENT, energy=1.0)
+        g.add_node(agent)
+        g.assign_institution("scientist", "paradigm1")
+        g.add_edge(_edge("mem1", "scientist", "paradigm1", EdgeType.MEMBERSHIP, weight=1.0))
+
+        t = ParadigmTemplate()
+        rng = np.random.default_rng(42)
+
+        energy_before = g.get_node("scientist").state.energy
+        for _ in range(10):
+            t.update(g, {}, rng)
+
+        assert g.get_node("scientist").state.energy > energy_before
+
+
+# ------------------------------------------------------------------
+# Population ecology template (Phase 15)
+# ------------------------------------------------------------------
+
+class TestPopulationEcology:
+    def test_population_grows_logistically(self):
+        g = DynamicsGraph()
+        g.add_node(_node("species1", NodeType.RESOURCE, resources=1.0))
+
+        t = PopulationEcologyTemplate()
+        rng = np.random.default_rng(42)
+
+        for _ in range(50):
+            t.update(g, {"birth_rate": 0.2, "death_rate": 0.05, "carrying_capacity": 100.0}, rng)
+
+        pop = g.get_node("species1").state.custom["population"]
+        assert pop > 10.0  # Should have grown from initial ~10
+        assert pop <= 200.0  # Hard cap at 2x carrying capacity
+
+    def test_predation_reduces_prey(self):
+        g = DynamicsGraph()
+        g.add_node(_node("predator", NodeType.AGENT, resources=5.0))
+        g.add_node(_node("prey", NodeType.RESOURCE, resources=5.0))
+        # Single directional edge: predator → prey (predator hunts prey)
+        g.add_edge(_edge("hunt", "predator", "prey", EdgeType.CONFLICT))
+
+        t = PopulationEcologyTemplate()
+        rng = np.random.default_rng(42)
+
+        # Bootstrap populations
+        t.update(g, {"predation_rate": 0.0}, rng)
+        prey_pop_before = g.get_node("prey").state.custom["population"]
+
+        for _ in range(10):
+            t.update(g, {"predation_rate": 0.1, "birth_rate": 0.0, "death_rate": 0.0}, rng)
+
+        prey_pop_after = g.get_node("prey").state.custom["population"]
+        assert prey_pop_after < prey_pop_before
+
+
+# ------------------------------------------------------------------
+# Habitat template (Phase 15)
+# ------------------------------------------------------------------
+
+class TestHabitat:
+    def test_runs_and_bootstraps_quality(self):
+        g = DynamicsGraph()
+        g.add_node(_node("forest", NodeType.ENVIRONMENT, energy=1.0))
+
+        t = HabitatTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+
+        assert "habitat_quality" in g.get_node("forest").state.custom
+        assert "habitat_area" in g.get_node("forest").state.custom
+
+    def test_degradation_from_occupant_pressure(self):
+        g = DynamicsGraph()
+        habitat = _node("meadow", NodeType.ENVIRONMENT, energy=3.0)
+        g.add_node(habitat)
+        # Many occupants creating pressure
+        for i in range(10):
+            occupant = _node(f"species{i}", NodeType.AGENT, resources=5.0)
+            occupant.state.custom["population"] = 50.0
+            g.add_node(occupant)
+            g.add_edge(_edge(f"occ{i}", f"species{i}", "meadow", EdgeType.RESOURCE_FLOW))
+
+        t = HabitatTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {"degradation_rate": 0.1, "restoration_rate": 0.0}, rng)
+
+        quality = g.get_node("meadow").state.custom["habitat_quality"]
+        assert quality < 0.8  # Should have degraded from default 0.8
+
+
+# ------------------------------------------------------------------
+# Ecosystem services template (Phase 15)
+# ------------------------------------------------------------------
+
+class TestEcosystemServices:
+    def test_runs_and_computes_service_value(self):
+        g = DynamicsGraph()
+        habitat = _node("reef", NodeType.ENVIRONMENT, energy=3.0)
+        habitat.state.custom["habitat_quality"] = 0.9
+        g.add_node(habitat)
+
+        # Add some species with populations
+        for i in range(3):
+            sp = _node(f"sp{i}", NodeType.RESOURCE, resources=5.0)
+            sp.state.custom["population"] = 10.0
+            g.add_node(sp)
+            g.add_edge(_edge(f"lives{i}", f"sp{i}", "reef", EdgeType.RESOURCE_FLOW))
+
+        t = EcosystemServicesTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {}, rng)
+
+        assert "service_value" in g.get_node("reef").state.custom
+        assert g.get_node("reef").state.custom["service_value"] > 0.0
+
+    def test_low_biodiversity_collapses_services(self):
+        g = DynamicsGraph()
+        habitat = _node("degraded", NodeType.ENVIRONMENT, energy=3.0)
+        habitat.state.custom["habitat_quality"] = 0.9
+        g.add_node(habitat)
+
+        # Species with zero population (extinct)
+        for i in range(5):
+            sp = _node(f"sp{i}", NodeType.RESOURCE, resources=0.0)
+            sp.state.custom["population"] = 0.0  # Extinct
+            g.add_node(sp)
+            g.add_edge(_edge(f"lives{i}", f"sp{i}", "degraded", EdgeType.RESOURCE_FLOW))
+
+        t = EcosystemServicesTemplate()
+        rng = np.random.default_rng(42)
+        t.update(g, {"biodiversity_threshold": 0.3}, rng)
+
+        # Service multiplier should be low when all species are extinct
+        multiplier = g.get_node("degraded").state.custom.get("service_multiplier", 1.0)
+        assert multiplier < 0.5

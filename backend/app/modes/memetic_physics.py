@@ -23,7 +23,10 @@ class MemeticPhysicsMode(SimulationMode):
     )
     icon = "atom"
     required_templates = ["diffusion", "evolutionary", "feedback"]
-    optional_templates = ["opinion", "resource"]
+    optional_templates = [
+        "opinion", "resource", "memetic_field", "memetic_energy",
+        "cultural_evolution", "memory_landscape",
+    ]
     default_params = {
         "diffusion": {"transfer_rate": 0.06, "decay_rate": 0.008, "noise_std": 0.005},
         "evolutionary": {
@@ -32,6 +35,9 @@ class MemeticPhysicsMode(SimulationMode):
             "carrying_capacity": 150.0,
         },
         "feedback": {"flow_coefficient": 0.15, "saturation_limit": 30.0},
+        "memetic_field": {"field_strength": 0.1, "conceptual_friction": 0.3},
+        "memetic_energy": {"total_energy": 100.0, "transfer_efficiency": 0.8},
+        "cultural_evolution": {"mutation_rate": 0.02, "recombination_probability": 0.01},
     }
     visualization_preset = "field"
     metrics_focus = [

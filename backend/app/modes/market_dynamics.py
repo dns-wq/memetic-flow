@@ -21,7 +21,10 @@ class MarketDynamicsMode(SimulationMode):
     )
     icon = "chart"
     required_templates = ["resource", "diffusion", "feedback"]
-    optional_templates = ["evolutionary", "opinion"]
+    optional_templates = [
+        "evolutionary", "opinion", "market_clearing", "competitive",
+        "supply_chain", "network_evolution",
+    ]
     default_params = {
         "resource": {
             "growth_rate": 0.04,
@@ -31,6 +34,9 @@ class MarketDynamicsMode(SimulationMode):
         },
         "diffusion": {"transfer_rate": 0.03, "decay_rate": 0.01},
         "feedback": {"flow_coefficient": 0.2, "saturation_limit": 40.0},
+        "market_clearing": {"price_adjustment_speed": 0.1, "elasticity": 1.0},
+        "competitive": {"network_effect_strength": 0.5, "quality_weight": 0.5},
+        "supply_chain": {"flow_capacity": 1.0, "lead_time": 3.0},
     }
     visualization_preset = "force"
     metrics_focus = [

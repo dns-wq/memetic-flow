@@ -26,7 +26,10 @@ class EcosystemMode(SimulationMode):
     )
     icon = "brain"
     required_templates = ["evolutionary", "diffusion", "resource"]
-    optional_templates = ["opinion", "feedback"]
+    optional_templates = [
+        "opinion", "feedback", "cognitive_ecology", "attention",
+        "cognitive_types", "contagion", "game_theory",
+    ]
     default_params = {
         "evolutionary": {
             "selection_strength": 0.15,
@@ -35,6 +38,9 @@ class EcosystemMode(SimulationMode):
         },
         "diffusion": {"transfer_rate": 0.05, "decay_rate": 0.02},
         "resource": {"growth_rate": 0.04, "competition_coefficient": 0.03},
+        "cognitive_ecology": {"reproduction_threshold": 5.0, "extinction_threshold": 0.1},
+        "attention": {"total_attention_pool": 100.0, "novelty_weight": 0.5},
+        "cognitive_types": {"strategy_switch_probability": 0.05},
     }
     visualization_preset = "force"
     metrics_focus = [
