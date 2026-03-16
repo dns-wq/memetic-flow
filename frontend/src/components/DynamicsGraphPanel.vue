@@ -76,11 +76,23 @@ let particles = []
 let particleFrame = null
 
 function nodeRadius(n) {
-  return Math.max(5, Math.min(25, 4 + Math.sqrt(n.state.energy) * 3))
+  // Wider visual range: energy 0.1 → 5px, energy 1.0 → 10px, energy 3.0 → 20px
+  const e = n.state.energy
+  return Math.max(4, Math.min(28, 3 + Math.pow(e, 0.6) * 7))
+}
+
+function nodeAlpha(n) {
+  // Brightness/opacity mapped to energy — low energy nodes fade
+  const e = n.state.energy
+  return Math.max(0.25, Math.min(1.0, 0.3 + Math.sqrt(Math.min(e, 3)) * 0.4))
 }
 
 function edgeWidth(e) {
-  return Math.max(0.5, Math.min(5, e.weight * 1.5))
+  return Math.max(0.3, Math.min(6, e.weight * 2.0))
+}
+
+function edgeAlpha(e) {
+  return Math.max(0.15, Math.min(0.8, 0.2 + e.weight * 0.25))
 }
 
 // --- Initialize simulation ---
@@ -219,6 +231,7 @@ function updateNodeStates() {
   const snap = props.snapshot
   const snapMap = new Map(snap.nodes.map(n => [n.node_id, n]))
 
+  // Update node states
   for (const node of nodes) {
     const fresh = snapMap.get(node.id)
     if (fresh) {
@@ -226,6 +239,59 @@ function updateNodeStates() {
       node.metadata = fresh.metadata
     }
   }
+
+  // Update edge data (weights, types may have changed; edges may be added/removed)
+  const nodeIndex = new Map(nodes.map(n => [n.id, n]))
+  const newEdgeIds = new Set(snap.edges.map(e => e.edge_id))
+  const oldEdgeIds = new Set(links.map(l => l.edge_id))
+
+  // Update existing edges
+  const edgeMap = new Map(snap.edges.map(e => [e.edge_id, e]))
+  for (const link of links) {
+    const fresh = edgeMap.get(link.edge_id)
+    if (fresh) {
+      link.weight = fresh.weight
+      link.transfer_rate = fresh.transfer_rate
+      link.edge_type = fresh.edge_type
+    }
+  }
+
+  // Handle edge additions/removals
+  const removed = links.filter(l => !newEdgeIds.has(l.edge_id))
+  const addedEdges = snap.edges.filter(e => !oldEdgeIds.has(e.edge_id))
+
+  if (removed.length > 0 || addedEdges.length > 0) {
+    // Remove old links
+    links = links.filter(l => newEdgeIds.has(l.edge_id))
+    // Add new links
+    for (const e of addedEdges) {
+      if (nodeIndex.has(e.source_id) && nodeIndex.has(e.target_id)) {
+        links.push({
+          source: e.source_id,
+          target: e.target_id,
+          ...e,
+        })
+      }
+    }
+    // Rebuild D3 link force with updated links
+    if (simulation) {
+      simulation.force('link', d3.forceLink(links).id(d => d.id)
+        .distance(d => (nodes.length > 100 ? 120 : 80) * (1.4 - Math.min(1.0, d.weight) * 0.7))
+        .strength(d => {
+          const t = d.edge_type
+          if (t === 'membership') return 0.6
+          if (t === 'cooperation') return 0.25
+          if (t === 'influence') return 0.15
+          return 0.1
+        }))
+    }
+  }
+
+  // Reheat simulation gently so layout responds to state changes
+  if (simulation) {
+    simulation.alpha(0.15).restart()
+  }
+
   draw()
 }
 
@@ -249,23 +315,26 @@ function draw() {
     ctx.moveTo(src.x, src.y)
     ctx.lineTo(tgt.x, tgt.y)
     ctx.strokeStyle = EDGE_COLORS[link.edge_type] || '#999'
-    ctx.globalAlpha = 0.4 + Math.min(0.5, link.weight * 0.2)
+    ctx.globalAlpha = edgeAlpha(link)
     ctx.lineWidth = edgeWidth(link)
     ctx.stroke()
     ctx.globalAlpha = 1
 
-    // Arrowhead
+    // Arrowhead (scaled with edge width)
     const angle = Math.atan2(tgt.y - src.y, tgt.x - src.x)
     const r = nodeRadius(tgt)
+    const arrowSize = 4 + edgeWidth(link) * 1.2
     const ax = tgt.x - Math.cos(angle) * (r + 3)
     const ay = tgt.y - Math.sin(angle) * (r + 3)
     ctx.beginPath()
     ctx.moveTo(ax, ay)
-    ctx.lineTo(ax - 6 * Math.cos(angle - 0.4), ay - 6 * Math.sin(angle - 0.4))
-    ctx.lineTo(ax - 6 * Math.cos(angle + 0.4), ay - 6 * Math.sin(angle + 0.4))
+    ctx.lineTo(ax - arrowSize * Math.cos(angle - 0.4), ay - arrowSize * Math.sin(angle - 0.4))
+    ctx.lineTo(ax - arrowSize * Math.cos(angle + 0.4), ay - arrowSize * Math.sin(angle + 0.4))
     ctx.closePath()
     ctx.fillStyle = EDGE_COLORS[link.edge_type] || '#999'
+    ctx.globalAlpha = edgeAlpha(link)
     ctx.fill()
+    ctx.globalAlpha = 1
   }
 
   // Draw particles along edges
@@ -274,24 +343,42 @@ function draw() {
   // Draw nodes
   for (const node of nodes) {
     const r = nodeRadius(node)
+    const alpha = nodeAlpha(node)
+    const baseColor = NODE_COLORS[node.node_type] || '#999'
+
+    // Energy glow for high-energy nodes
+    if (node.state.energy > 1.5) {
+      ctx.beginPath()
+      ctx.arc(node.x, node.y, r + 4, 0, 2 * Math.PI)
+      ctx.fillStyle = baseColor
+      ctx.globalAlpha = (node.state.energy - 1.5) * 0.08
+      ctx.fill()
+      ctx.globalAlpha = 1
+    }
+
+    // Main node circle
     ctx.beginPath()
     ctx.arc(node.x, node.y, r, 0, 2 * Math.PI)
-    ctx.fillStyle = NODE_COLORS[node.node_type] || '#999'
+    ctx.fillStyle = baseColor
+    ctx.globalAlpha = alpha
     ctx.fill()
+    ctx.globalAlpha = 1
 
     // Institution border
     if (node.institution_id) {
-      ctx.strokeStyle = '#333'
+      ctx.strokeStyle = '#555'
       ctx.lineWidth = 1.5
       ctx.stroke()
     }
 
-    // Label
+    // Label (opacity also follows energy)
     if (transform.k > 0.6) {
       ctx.fillStyle = '#c9d1d9'
+      ctx.globalAlpha = Math.max(0.4, alpha)
       ctx.font = `${Math.max(9, 11 / transform.k)}px sans-serif`
       ctx.textAlign = 'center'
       ctx.fillText(node.label, node.x, node.y + r + 12)
+      ctx.globalAlpha = 1
     }
   }
 
