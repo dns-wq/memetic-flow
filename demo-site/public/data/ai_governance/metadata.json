@@ -1,0 +1,14 @@
+{
+  "name": "ai_governance",
+  "title": "AI Governance Priorities 2026",
+  "source": "Partnership on AI",
+  "source_url": "https://partnershiponai.org",
+  "description": "How major tech companies, governments, and civil society organizations shape AI governance through policy advocacy, regulatory frameworks, and public discourse.",
+  "mode": "public_discourse",
+  "document": "pai_ai_governance_2026.md",
+  "sim_id": "88d8a128d901",
+  "total_steps": 400,
+  "status": "completed",
+  "num_nodes": 105,
+  "num_edges": 83
+}

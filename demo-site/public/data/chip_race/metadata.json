@@ -1,0 +1,14 @@
+{
+  "name": "chip_race",
+  "title": "US-China AI Chip Race",
+  "source": "Compiled from Semafor, IEEE Spectrum, Time, SCMP",
+  "source_url": "",
+  "description": "The geopolitical and economic dynamics of US-China semiconductor competition: export controls, domestic chip development, supply chain dependencies, and AI company strategies.",
+  "mode": "ecosystem",
+  "document": "us_china_chip_race.md",
+  "sim_id": "0c42c038b4fa",
+  "total_steps": 400,
+  "status": "completed",
+  "num_nodes": 59,
+  "num_edges": 103
+}

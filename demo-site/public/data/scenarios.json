@@ -1,0 +1,34 @@
+{
+  "scenarios": [
+    {
+      "name": "ai_governance",
+      "title": "AI Governance Priorities 2026",
+      "source": "Partnership on AI",
+      "description": "How major tech companies, governments, and civil society organizations shape AI governance through policy advocacy, regulatory frameworks, and public discourse.",
+      "mode": "public_discourse",
+      "num_nodes": 105,
+      "num_edges": 83,
+      "total_steps": 400
+    },
+    {
+      "name": "tech_startups",
+      "title": "Tech Startup Ecosystem 2026",
+      "source": "Crunchbase News",
+      "description": "The dynamics of AI companies, venture capital firms, and public markets competing for capital, talent, and market dominance in the 2026 startup ecosystem.",
+      "mode": "market_dynamics",
+      "num_nodes": 51,
+      "num_edges": 97,
+      "total_steps": 400
+    },
+    {
+      "name": "chip_race",
+      "title": "US-China AI Chip Race",
+      "source": "Compiled from Semafor, IEEE Spectrum, Time, SCMP",
+      "description": "The geopolitical and economic dynamics of US-China semiconductor competition: export controls, domestic chip development, supply chain dependencies, and AI company strategies.",
+      "mode": "ecosystem",
+      "num_nodes": 59,
+      "num_edges": 103,
+      "total_steps": 400
+    }
+  ]
+}

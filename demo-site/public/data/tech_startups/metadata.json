@@ -1,0 +1,14 @@
+{
+  "name": "tech_startups",
+  "title": "Tech Startup Ecosystem 2026",
+  "source": "Crunchbase News",
+  "source_url": "https://news.crunchbase.com",
+  "description": "The dynamics of AI companies, venture capital firms, and public markets competing for capital, talent, and market dominance in the 2026 startup ecosystem.",
+  "mode": "market_dynamics",
+  "document": "tech_startup_trends_2026.md",
+  "sim_id": "cd55cf3b49a3",
+  "total_steps": 400,
+  "status": "completed",
+  "num_nodes": 51,
+  "num_edges": 97
+}

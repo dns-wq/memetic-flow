@@ -56,5 +56,11 @@ backend/logs/
 # 上传文件
 backend/uploads/
 
-# Docker 数据
-data/
+# Docker & runtime data
+/data/
+backend/data/
+demo/data/
+
+# Allow demo-site data directories
+!demo-site/src/data/
+!demo-site/public/data/

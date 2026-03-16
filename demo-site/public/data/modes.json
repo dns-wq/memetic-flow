@@ -1,0 +1,353 @@
+[
+  {
+    "default_params": {},
+    "description": "Manual template selection with full parameter control.",
+    "icon": "wrench",
+    "metrics_focus": [],
+    "name": "custom",
+    "optional_templates": [
+      "diffusion",
+      "opinion",
+      "evolutionary",
+      "resource",
+      "feedback"
+    ],
+    "required_templates": [],
+    "suggested_for": [],
+    "visualization_preset": "force"
+  },
+  {
+    "default_params": {
+      "diffusion": {
+        "decay_rate": 0.005,
+        "transfer_rate": 0.04
+      },
+      "feedback": {
+        "flow_coefficient": 0.12
+      },
+      "opinion": {
+        "convergence_rate": 0.08,
+        "tolerance": 0.35
+      },
+      "resource": {
+        "competition_coefficient": 0.02,
+        "growth_rate": 0.03
+      }
+    },
+    "description": "Simulate institutional emergence, norm formation, and civilizational dynamics from agent interactions.",
+    "icon": "castle",
+    "metrics_focus": [
+      "institutional_cohesion",
+      "polarization_index",
+      "clustering_coefficient",
+      "resource_gini"
+    ],
+    "name": "synthetic_civ",
+    "optional_templates": [
+      "evolutionary"
+    ],
+    "required_templates": [
+      "diffusion",
+      "opinion",
+      "resource",
+      "feedback"
+    ],
+    "suggested_for": [
+      "policy",
+      "regulation",
+      "governance",
+      "institution",
+      "society",
+      "civilization",
+      "political",
+      "government"
+    ],
+    "visualization_preset": "force"
+  },
+  {
+    "default_params": {
+      "diffusion": {
+        "decay_rate": 0.02,
+        "transfer_rate": 0.05
+      },
+      "evolutionary": {
+        "carrying_capacity": 100.0,
+        "mutation_rate": 0.03,
+        "selection_strength": 0.15
+      },
+      "resource": {
+        "competition_coefficient": 0.03,
+        "growth_rate": 0.04
+      }
+    },
+    "description": "Model cognitive ecology \u2014 agents compete for attention, evolve strategies, and experience selection pressure.",
+    "icon": "brain",
+    "metrics_focus": [
+      "idea_entropy",
+      "resource_gini",
+      "cascade_count",
+      "total_energy"
+    ],
+    "name": "ecosystem",
+    "optional_templates": [
+      "opinion",
+      "feedback"
+    ],
+    "required_templates": [
+      "evolutionary",
+      "diffusion",
+      "resource"
+    ],
+    "suggested_for": [
+      "attention",
+      "cognitive",
+      "platform",
+      "social media",
+      "misinformation",
+      "ecology",
+      "strategy",
+      "evolution"
+    ],
+    "visualization_preset": "force"
+  },
+  {
+    "default_params": {
+      "diffusion": {
+        "decay_rate": 0.008,
+        "noise_std": 0.005,
+        "transfer_rate": 0.06
+      },
+      "evolutionary": {
+        "carrying_capacity": 150.0,
+        "mutation_rate": 0.04,
+        "selection_strength": 0.12
+      },
+      "feedback": {
+        "flow_coefficient": 0.15,
+        "saturation_limit": 30.0
+      }
+    },
+    "description": "Treat ideas as particles in a conceptual field \u2014 measure memetic energy, entropy, and gravity wells.",
+    "icon": "atom",
+    "metrics_focus": [
+      "idea_entropy",
+      "total_energy",
+      "cascade_count",
+      "feedback_loop_strength"
+    ],
+    "name": "memetic_physics",
+    "optional_templates": [
+      "opinion",
+      "resource"
+    ],
+    "required_templates": [
+      "diffusion",
+      "evolutionary",
+      "feedback"
+    ],
+    "suggested_for": [
+      "narrative",
+      "meme",
+      "culture",
+      "propaganda",
+      "campaign",
+      "ideology",
+      "discourse",
+      "media"
+    ],
+    "visualization_preset": "field"
+  },
+  {
+    "default_params": {
+      "diffusion": {
+        "decay_rate": 0.01,
+        "transfer_rate": 0.03
+      },
+      "feedback": {
+        "flow_coefficient": 0.2,
+        "saturation_limit": 40.0
+      },
+      "resource": {
+        "carrying_capacity": 20.0,
+        "competition_coefficient": 0.03,
+        "flow_rate": 0.15,
+        "growth_rate": 0.04
+      }
+    },
+    "description": "Simulate competitive markets, supply chains, and economic dynamics with network-mediated resource flows.",
+    "icon": "chart",
+    "metrics_focus": [
+      "resource_gini",
+      "total_energy",
+      "cascade_count",
+      "clustering_coefficient"
+    ],
+    "name": "market_dynamics",
+    "optional_templates": [
+      "evolutionary",
+      "opinion"
+    ],
+    "required_templates": [
+      "resource",
+      "diffusion",
+      "feedback"
+    ],
+    "suggested_for": [
+      "market",
+      "business",
+      "competition",
+      "supply chain",
+      "trade",
+      "pricing",
+      "startup",
+      "economy",
+      "finance"
+    ],
+    "visualization_preset": "force"
+  },
+  {
+    "default_params": {
+      "diffusion": {
+        "decay_rate": 0.005,
+        "transfer_rate": 0.05
+      },
+      "feedback": {
+        "flow_coefficient": 0.1
+      },
+      "opinion": {
+        "convergence_rate": 0.12,
+        "noise_std": 0.02,
+        "tolerance": 0.25
+      }
+    },
+    "description": "Simulate polarization, coalition formation, and deliberation dynamics in public discourse.",
+    "icon": "megaphone",
+    "metrics_focus": [
+      "polarization_index",
+      "idea_entropy",
+      "clustering_coefficient",
+      "institutional_cohesion"
+    ],
+    "name": "public_discourse",
+    "optional_templates": [
+      "evolutionary",
+      "resource"
+    ],
+    "required_templates": [
+      "opinion",
+      "diffusion",
+      "feedback"
+    ],
+    "suggested_for": [
+      "politics",
+      "election",
+      "democracy",
+      "debate",
+      "polarization",
+      "discourse",
+      "coalition",
+      "public opinion",
+      "voting",
+      "deliberation"
+    ],
+    "visualization_preset": "force"
+  },
+  {
+    "default_params": {
+      "diffusion": {
+        "decay_rate": 0.005,
+        "threshold": 0.1,
+        "transfer_rate": 0.04
+      },
+      "evolutionary": {
+        "carrying_capacity": 200.0,
+        "mutation_rate": 0.02,
+        "selection_strength": 0.08
+      },
+      "resource": {
+        "flow_rate": 0.08,
+        "growth_rate": 0.03
+      }
+    },
+    "description": "Simulate knowledge production, paradigm dynamics, and innovation diffusion in research communities.",
+    "icon": "flask",
+    "metrics_focus": [
+      "idea_entropy",
+      "cascade_count",
+      "clustering_coefficient",
+      "total_energy"
+    ],
+    "name": "knowledge_ecosystems",
+    "optional_templates": [
+      "feedback",
+      "opinion"
+    ],
+    "required_templates": [
+      "diffusion",
+      "evolutionary",
+      "resource"
+    ],
+    "suggested_for": [
+      "science",
+      "research",
+      "knowledge",
+      "discovery",
+      "innovation",
+      "technology",
+      "paradigm",
+      "academic",
+      "peer review",
+      "R&D"
+    ],
+    "visualization_preset": "force"
+  },
+  {
+    "default_params": {
+      "evolutionary": {
+        "carrying_capacity": 100.0,
+        "mutation_rate": 0.01,
+        "selection_strength": 0.1
+      },
+      "feedback": {
+        "flow_coefficient": 0.08,
+        "saturation_limit": 20.0
+      },
+      "resource": {
+        "carrying_capacity": 15.0,
+        "competition_coefficient": 0.02,
+        "flow_rate": 0.05,
+        "growth_rate": 0.06
+      }
+    },
+    "description": "Simulate species interactions, habitat dynamics, and ecosystem tipping points with ecological models.",
+    "icon": "leaf",
+    "metrics_focus": [
+      "idea_entropy",
+      "resource_gini",
+      "total_energy",
+      "feedback_loop_strength"
+    ],
+    "name": "ecological_systems",
+    "optional_templates": [
+      "diffusion"
+    ],
+    "required_templates": [
+      "resource",
+      "evolutionary",
+      "feedback"
+    ],
+    "suggested_for": [
+      "ecology",
+      "environment",
+      "species",
+      "habitat",
+      "biodiversity",
+      "conservation",
+      "ecosystem",
+      "sustainability",
+      "climate",
+      "wildlife"
+    ],
+    "visualization_preset": "force"
+  }
+]
