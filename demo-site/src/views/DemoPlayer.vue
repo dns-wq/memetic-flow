@@ -42,13 +42,43 @@
                           :events="events" class="timeline-area" />
         </div>
         <div class="right-panel">
-          <div class="scenario-info">
-            <h3>{{ metadata.title }}</h3>
-            <p class="source">Source: {{ metadata.source }}</p>
-            <p class="description">{{ metadata.description }}</p>
+          <!-- Tabs -->
+          <div class="rp-tabs">
+            <button :class="['rp-tab', { active: activeTab === 'overview' }]"
+                    @click="activeTab = 'overview'">Overview</button>
+            <button :class="['rp-tab', { active: activeTab === 'document' }]"
+                    @click="activeTab = 'document'">
+              Source Document
+            </button>
           </div>
-          <MetricsDashboard :metrics="metrics" :currentTimestep="currentTimestep"
-                            :events="events" />
+
+          <!-- Overview tab -->
+          <template v-if="activeTab === 'overview'">
+            <div class="scenario-info">
+              <h3>{{ metadata.title }}</h3>
+              <p class="source">Source: {{ metadata.source }}</p>
+              <p class="description">{{ metadata.description }}</p>
+            </div>
+            <MetricsDashboard :metrics="metrics" :currentTimestep="currentTimestep"
+                              :events="events" />
+          </template>
+
+          <!-- Document tab -->
+          <template v-if="activeTab === 'document'">
+            <div class="document-viewer" v-if="documentContent">
+              <div class="doc-header">
+                <span class="doc-filename">{{ metadata.document || 'source.md' }}</span>
+                <a v-if="metadata.source_url" :href="metadata.source_url"
+                   target="_blank" rel="noopener" class="doc-source-link">
+                  View original &rarr;
+                </a>
+              </div>
+              <div class="doc-body" v-html="renderedDocument"></div>
+            </div>
+            <div v-else class="doc-empty">
+              <p>No source document available for this scenario.</p>
+            </div>
+          </template>
         </div>
       </div>
     </template>
@@ -56,12 +86,12 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import DynamicsGraphPanel from '@components/DynamicsGraphPanel.vue'
 import TemporalSlider from '@components/TemporalSlider.vue'
 import MetricsDashboard from '@components/MetricsDashboard.vue'
-import { loadManifest, loadScenarioData, getSnapshot } from '../data/staticLoader.js'
+import { loadManifest, loadScenarioData, loadDocument, getSnapshot } from '../data/staticLoader.js'
 
 const props = defineProps({ scenario: String })
 const router = useRouter()
@@ -76,6 +106,43 @@ const maxTimestep = ref(0)
 const metrics = ref({})
 const events = ref([])
 const scenarios = ref([])
+const activeTab = ref('overview')
+const documentContent = ref(null)
+
+/** Simple markdown to HTML renderer (no external dependency) */
+function renderMarkdown(md) {
+  if (!md) return ''
+  return md
+    // Escape HTML
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    // Headers
+    .replace(/^### (.+)$/gm, '<h5>$1</h5>')
+    .replace(/^## (.+)$/gm, '<h4>$1</h4>')
+    .replace(/^# (.+)$/gm, '<h3>$1</h3>')
+    // Bold and italic
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    // Links
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    // List items
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    // Wrap consecutive <li> in <ul>
+    .replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>')
+    // Paragraphs (double newline)
+    .replace(/\n\n/g, '</p><p>')
+    // Single newlines within paragraphs
+    .replace(/\n/g, '<br/>')
+    // Wrap in paragraph
+    .replace(/^/, '<p>').replace(/$/, '</p>')
+    // Clean up empty paragraphs
+    .replace(/<p><\/p>/g, '')
+    .replace(/<p>(<h[345]>)/g, '$1')
+    .replace(/(<\/h[345]>)<\/p>/g, '$1')
+    .replace(/<p>(<ul>)/g, '$1')
+    .replace(/(<\/ul>)<\/p>/g, '$1')
+}
+
+const renderedDocument = computed(() => renderMarkdown(documentContent.value))
 
 onMounted(() => load())
 
@@ -87,9 +154,12 @@ async function load() {
     const manifest = await loadManifest()
     scenarios.value = manifest.scenarios
 
-    // Load scenario data
+    // Load scenario data + document in parallel
     const scenarioName = props.scenario || route.params.scenario
-    const data = await loadScenarioData(scenarioName)
+    const [data, doc] = await Promise.all([
+      loadScenarioData(scenarioName),
+      loadDocument(scenarioName),
+    ])
 
     metadata.value = data.metadata
     currentSnapshot.value = data.graph
@@ -97,6 +167,8 @@ async function load() {
     events.value = Array.isArray(data.events) ? data.events : []
     maxTimestep.value = data.metadata.total_steps || 0
     currentTimestep.value = maxTimestep.value
+    documentContent.value = doc
+    activeTab.value = 'overview'
 
     loading.value = false
   } catch (e) {
@@ -249,6 +321,31 @@ watch(currentTimestep, async (ts) => {
   border-left: 1px solid #21262d;
 }
 
+.rp-tabs {
+  display: flex;
+  gap: 0;
+  flex-shrink: 0;
+  border-bottom: 1px solid #21262d;
+  margin-bottom: 8px;
+}
+.rp-tab {
+  flex: 1;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #8b949e;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.rp-tab:hover { color: #c9d1d9; }
+.rp-tab.active {
+  color: #58a6ff;
+  border-bottom-color: #58a6ff;
+}
+
 .scenario-info {
   padding: 12px;
   background: #161b22;
@@ -270,6 +367,82 @@ watch(currentTimestep, async (ts) => {
   font-size: 12px;
   color: #c9d1d9;
   line-height: 1.5;
+}
+
+/* Document viewer */
+.document-viewer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  background: #161b22;
+  border-radius: 8px;
+  border: 1px solid #21262d;
+  overflow: hidden;
+}
+.doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #1c2128;
+  border-bottom: 1px solid #21262d;
+  flex-shrink: 0;
+}
+.doc-filename {
+  font-size: 12px;
+  color: #8b949e;
+  font-family: monospace;
+}
+.doc-source-link {
+  font-size: 11px;
+  color: #58a6ff;
+  text-decoration: none;
+}
+.doc-source-link:hover { text-decoration: underline; }
+.doc-body {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #c9d1d9;
+}
+.doc-body h3 {
+  font-size: 16px;
+  color: #e6edf3;
+  margin: 20px 0 8px 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #21262d;
+}
+.doc-body h4 {
+  font-size: 14px;
+  color: #e6edf3;
+  margin: 16px 0 6px 0;
+}
+.doc-body h5 {
+  font-size: 13px;
+  color: #e6edf3;
+  margin: 12px 0 4px 0;
+}
+.doc-body ul {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+.doc-body li {
+  margin-bottom: 4px;
+}
+.doc-body a {
+  color: #58a6ff;
+  text-decoration: none;
+}
+.doc-body a:hover { text-decoration: underline; }
+.doc-body strong { color: #e6edf3; }
+.doc-empty {
+  padding: 24px;
+  text-align: center;
+  color: #8b949e;
+  font-size: 13px;
 }
 
 .btn {

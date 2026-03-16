@@ -16,6 +16,15 @@ async function fetchJSON(path) {
   return data
 }
 
+async function fetchText(path) {
+  if (cache.has(path)) return cache.get(path)
+  const resp = await fetch(`${BASE}/${path}`)
+  if (!resp.ok) return null // Document may not exist for all scenarios
+  const text = await resp.text()
+  cache.set(path, text)
+  return text
+}
+
 /** Load the scenarios manifest */
 export async function loadManifest() {
   return fetchJSON('scenarios.json')
@@ -44,6 +53,11 @@ export async function loadMetrics(scenario) {
 /** Load events for a scenario */
 export async function loadEvents(scenario) {
   return fetchJSON(`${scenario}/events.json`)
+}
+
+/** Load the source document markdown for a scenario (may return null) */
+export async function loadDocument(scenario) {
+  return fetchText(`${scenario}/document.md`)
 }
 
 /** Load all sampled snapshots for a scenario (cached after first load) */
