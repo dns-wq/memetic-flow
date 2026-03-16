@@ -3,7 +3,8 @@
 Capture screenshots from the Memetic Flow demo site for README documentation.
 
 Captures hero screenshots and animated GIF from the demo-site (Vue static app)
-at localhost:4000 or the live GitHub Pages site.
+at localhost:4000 or the live GitHub Pages site. Injects light-mode CSS for
+better visibility in README images.
 
 Requires: pip install playwright && playwright install chromium
 
@@ -22,6 +23,211 @@ from pathlib import Path
 
 OUTPUT_DIR = Path("docs/screenshots")
 GIF_DIR = Path("docs/gifs")
+
+# Light-mode CSS injected into the page before screenshots
+LIGHT_MODE_CSS = """
+/* ===== Global ===== */
+body {
+  background: #ffffff !important;
+  color: #24292f !important;
+}
+::-webkit-scrollbar-track { background: #eaeef2 !important; }
+::-webkit-scrollbar-thumb { background: #afb8c1 !important; }
+
+/* ===== Demo Player ===== */
+.demo-player { background: #ffffff !important; }
+
+.dp-header {
+  background: #f6f8fa !important;
+  border-bottom-color: #d0d7de !important;
+}
+.dp-header .brand { color: #0969da !important; }
+.dp-header .separator { color: #57606a !important; }
+.dp-header .demo-title { color: #24292f !important; }
+.dp-header .demo-stats { color: #656d76 !important; }
+.dp-header .mode-badge {
+  background: #ddf4ff !important;
+  color: #0969da !important;
+}
+.dp-header .scenario-select {
+  background: #f6f8fa !important;
+  border-color: #d0d7de !important;
+  color: #24292f !important;
+}
+
+/* ===== Right panel ===== */
+.right-panel {
+  border-left-color: #d0d7de !important;
+  background: #ffffff !important;
+}
+.rp-tabs { border-bottom-color: #d0d7de !important; }
+.rp-tab { color: #656d76 !important; }
+.rp-tab.active { color: #0969da !important; border-bottom-color: #0969da !important; }
+.rp-tab:hover { color: #24292f !important; }
+
+.scenario-info {
+  background: #f6f8fa !important;
+  border-color: #d0d7de !important;
+}
+.scenario-info h3 { color: #24292f !important; }
+.scenario-info .source { color: #656d76 !important; }
+.scenario-info .description { color: #424a53 !important; }
+
+/* ===== Metrics dashboard ===== */
+.metrics-dashboard {
+  background: #f6f8fa !important;
+}
+.chart-card {
+  background: #ffffff !important;
+  border-color: #d0d7de !important;
+}
+.chart-card .chart-title { color: #24292f !important; }
+.chart-card .chart-value { color: #0969da !important; }
+
+/* ===== Graph panel ===== */
+.dynamics-graph-panel {
+  background: #f6f8fa !important;
+}
+
+/* ===== Tooltip ===== */
+.tooltip {
+  background: rgba(255, 255, 255, 0.97) !important;
+  border-color: #d0d7de !important;
+  color: #24292f !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12) !important;
+}
+.tooltip .tooltip-title { color: #24292f !important; }
+.tooltip .tooltip-type { color: #656d76 !important; }
+.tooltip .tooltip-desc { color: #424a53 !important; }
+.tooltip .tooltip-goals { color: #424a53 !important; }
+.tooltip .tooltip-state { color: #424a53 !important; }
+.tooltip .state-label { color: #656d76 !important; }
+.tooltip .state-value { color: #0969da !important; }
+
+/* ===== Temporal slider ===== */
+.temporal-slider {
+  background: #f6f8fa !important;
+  border-top-color: #d0d7de !important;
+}
+.temporal-slider .ctrl-btn {
+  background: #f6f8fa !important;
+  border-color: #d0d7de !important;
+  color: #24292f !important;
+}
+.temporal-slider .ctrl-btn:hover { background: #eaeef2 !important; }
+.temporal-slider .timestep-label { color: #656d76 !important; }
+.temporal-slider .speed-select {
+  background: #f6f8fa !important;
+  border-color: #d0d7de !important;
+  color: #24292f !important;
+}
+.temporal-slider input[type=range] { accent-color: #0969da !important; }
+
+/* ===== Document viewer ===== */
+.document-viewer {
+  background: #f6f8fa !important;
+  border-color: #d0d7de !important;
+}
+.doc-header {
+  background: #eaeef2 !important;
+  border-color: #d0d7de !important;
+}
+.doc-filename { color: #656d76 !important; }
+.doc-source-link { color: #0969da !important; }
+.doc-body { color: #24292f !important; }
+.doc-body h3, .doc-body h4, .doc-body h5 { color: #24292f !important; }
+.doc-body a { color: #0969da !important; }
+
+/* ===== Landing page ===== */
+.landing { background: #ffffff !important; }
+.hero-tagline { color: #424a53 !important; }
+.hero-sub { color: #656d76 !important; }
+.feature-card {
+  background: #f6f8fa !important;
+  border-color: #d0d7de !important;
+}
+.feature-card h3 { color: #24292f !important; }
+.feature-card p { color: #656d76 !important; }
+.scenario-card {
+  background: #f6f8fa !important;
+  border-color: #d0d7de !important;
+}
+.scenario-card h3 { color: #24292f !important; }
+.scenario-card p, .scenario-card .sc-meta { color: #656d76 !important; }
+.mode-card {
+  background: #f6f8fa !important;
+  border-color: #d0d7de !important;
+}
+.footer { border-top-color: #d0d7de !important; color: #656d76 !important; }
+"""
+
+# JavaScript to patch canvas rendering colors for light mode
+LIGHT_MODE_CANVAS_JS = """
+(() => {
+  // Patch DynamicsGraphPanel canvas colors
+  // We override getContext to intercept fillStyle/strokeStyle assignments
+  const darkToLight = {
+    '#0d1117': '#f6f8fa',
+    '#161b22': '#f6f8fa',
+    '#1c2128': '#eaeef2',
+    '#c9d1d9': '#24292f',   // node labels
+    '#e6edf3': '#24292f',   // primary text
+    '#8b949e': '#656d76',   // muted text
+    '#484f58': '#8c959f',   // faint text / grid lines
+    '#555': '#bbb',         // institution borders
+    '#30363d': '#d0d7de',   // chart grid lines
+  };
+
+  // Store original getContext
+  const origGetContext = HTMLCanvasElement.prototype.getContext;
+  HTMLCanvasElement.prototype.getContext = function(type, attrs) {
+    const ctx = origGetContext.call(this, type, attrs);
+    if (type === '2d' && ctx && !ctx.__lightPatched) {
+      ctx.__lightPatched = true;
+      const origFillRect = ctx.fillRect.bind(ctx);
+
+      // Proxy fillStyle
+      let _fillStyle = ctx.fillStyle;
+      Object.defineProperty(ctx, 'fillStyle', {
+        get() { return _fillStyle; },
+        set(v) {
+          if (typeof v === 'string') {
+            const lower = v.toLowerCase();
+            _fillStyle = darkToLight[lower] || v;
+          } else {
+            _fillStyle = v;
+          }
+          // Apply through the native setter via a helper
+          origGetContext.call(ctx.canvas, '2d').__proto__.__lookupSetter__('fillStyle').call(ctx, _fillStyle);
+        }
+      });
+
+      // Proxy strokeStyle
+      let _strokeStyle = ctx.strokeStyle;
+      Object.defineProperty(ctx, 'strokeStyle', {
+        get() { return _strokeStyle; },
+        set(v) {
+          if (typeof v === 'string') {
+            const lower = v.toLowerCase();
+            _strokeStyle = darkToLight[lower] || v;
+          } else {
+            _strokeStyle = v;
+          }
+          origGetContext.call(ctx.canvas, '2d').__proto__.__lookupSetter__('strokeStyle').call(ctx, _strokeStyle);
+        }
+      });
+    }
+    return ctx;
+  };
+})();
+"""
+
+
+async def _inject_light_mode(page) -> None:
+    """Inject light-mode CSS and canvas color overrides."""
+    await page.add_style_tag(content=LIGHT_MODE_CSS)
+    # Force canvas re-render by briefly resizing
+    await page.wait_for_timeout(200)
 
 
 async def _zoom_to_fit(page) -> None:
@@ -70,6 +276,7 @@ async def _switch_scenario(page, base_url: str, scenario: str) -> None:
     await page.goto(url, wait_until="networkidle")
     await page.wait_for_selector("canvas", timeout=30000)
     await page.wait_for_timeout(4000)
+    await _inject_light_mode(page)
     await _click_overview_tab(page)
     await _zoom_to_fit(page)
 
