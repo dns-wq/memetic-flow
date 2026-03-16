@@ -25,15 +25,15 @@
 ---
 
 <div align="center">
-<img src="docs/screenshots/hero_force_graph.png" alt="Memetic Flow — 262个节点自组织形成制度、贸易网络和规范集群" width="100%"/>
-<br/><em>文明从零开始 — 262个节点自组织形成制度与贸易网络</em>
+<img src="docs/screenshots/hero_force_graph.png" alt="Memetic Flow — AI治理优先事项2026，105个节点建模政策话语" width="100%"/>
+<br/><em>AI治理优先事项2026 — 105个节点建模政府、科技公司和公民社会之间的政策话语</em>
 </div>
 
 <br/>
 
 <div align="center">
-<img src="docs/gifs/simulation_replay.gif" alt="仿真回放 — 观察文明在400个时间步中涌现" width="80%"/>
-<br/><em>观察文明在400个时间步中涌现 — 制度形成、规范传播、贸易路线结晶</em>
+<img src="docs/gifs/simulation_replay.gif" alt="仿真回放 — 观察AI治理动态在400个时间步中演变" width="80%"/>
+<br/><em>观察AI治理动态在400个时间步中演变 — 联盟形成、极化变化、政策话语演进</em>
 </div>
 
 ---
@@ -102,12 +102,12 @@ Canvas 渲染的 D3.js 力导向图：
 <div align="center">
 <table>
 <tr>
-<td width="50%"><img src="docs/screenshots/hero_force_graph.png" alt="文明从零开始"/><br/><em>文明从零开始 — 262个节点</em></td>
-<td width="50%"><img src="docs/screenshots/hero_metrics_dashboard.png" alt="社交媒体监管"/><br/><em>社交媒体监管 — 极化动力学</em></td>
+<td width="50%"><img src="docs/screenshots/hero_force_graph.png" alt="AI治理优先事项2026"/><br/><em>AI治理 — 105个节点，政策话语</em></td>
+<td width="50%"><img src="docs/screenshots/hero_metrics_dashboard.png" alt="AI治理指标面板"/><br/><em>AI治理 — t=300时的指标面板</em></td>
 </tr>
 <tr>
-<td><img src="docs/screenshots/hero_ai_startup.png" alt="AI创业生态"/><br/><em>AI创业生态 — 市场竞争</em></td>
-<td><img src="docs/screenshots/hero_ecosystem.png" alt="生态系统崩溃"/><br/><em>生态系统崩溃 — 85个物种食物网</em></td>
+<td><img src="docs/screenshots/hero_tech_startups.png" alt="科技创业生态2026"/><br/><em>科技创业生态 — 市场动态</em></td>
+<td><img src="docs/screenshots/hero_chip_race.png" alt="中美AI芯片竞赛"/><br/><em>中美芯片竞赛 — 地缘政治动态</em></td>
 </tr>
 <tr>
 <td colspan="2"><img src="docs/screenshots/hero_phase_transition.png" alt="相变 — 涌现集群与节点元数据" width="100%"/><br/><em>相变 — 涌现集群形成与丰富的节点元数据提示</em></td>

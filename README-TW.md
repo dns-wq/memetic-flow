@@ -25,15 +25,15 @@
 ---
 
 <div align="center">
-<img src="docs/screenshots/hero_force_graph.png" alt="Memetic Flow — 262個節點自組織形成制度、貿易網路和規範集群" width="100%"/>
-<br/><em>文明從零開始 — 262個節點自組織形成制度與貿易網路</em>
+<img src="docs/screenshots/hero_force_graph.png" alt="Memetic Flow — AI治理優先事項2026，105個節點建模政策話語" width="100%"/>
+<br/><em>AI治理優先事項2026 — 105個節點建模政府、科技公司和公民社會之間的政策話語</em>
 </div>
 
 <br/>
 
 <div align="center">
-<img src="docs/gifs/simulation_replay.gif" alt="模擬回放 — 觀察文明在400個時間步中湧現" width="80%"/>
-<br/><em>觀察文明在400個時間步中湧現 — 制度形成、規範傳播、貿易路線結晶</em>
+<img src="docs/gifs/simulation_replay.gif" alt="模擬回放 — 觀察AI治理動態在400個時間步中演變" width="80%"/>
+<br/><em>觀察AI治理動態在400個時間步中演變 — 聯盟形成、極化變化、政策話語演進</em>
 </div>
 
 ---
@@ -90,12 +90,12 @@ Canvas 渲染的 D3.js 力導向圖，支援動態粒子流、豐富的工具提
 <div align="center">
 <table>
 <tr>
-<td width="50%"><img src="docs/screenshots/hero_force_graph.png" alt="文明從零開始"/><br/><em>文明從零開始 — 262個節點</em></td>
-<td width="50%"><img src="docs/screenshots/hero_metrics_dashboard.png" alt="社群媒體監管"/><br/><em>社群媒體監管 — 極化動力學</em></td>
+<td width="50%"><img src="docs/screenshots/hero_force_graph.png" alt="AI治理優先事項2026"/><br/><em>AI治理 — 105個節點，政策話語</em></td>
+<td width="50%"><img src="docs/screenshots/hero_metrics_dashboard.png" alt="AI治理指標面板"/><br/><em>AI治理 — t=300時的指標面板</em></td>
 </tr>
 <tr>
-<td><img src="docs/screenshots/hero_ai_startup.png" alt="AI新創生態"/><br/><em>AI新創生態 — 市場競爭</em></td>
-<td><img src="docs/screenshots/hero_ecosystem.png" alt="生態系統崩潰"/><br/><em>生態系統崩潰 — 85個物種食物網</em></td>
+<td><img src="docs/screenshots/hero_tech_startups.png" alt="科技新創生態2026"/><br/><em>科技新創生態 — 市場動態</em></td>
+<td><img src="docs/screenshots/hero_chip_race.png" alt="中美AI晶片競賽"/><br/><em>中美晶片競賽 — 地緣政治動態</em></td>
 </tr>
 <tr>
 <td colspan="2"><img src="docs/screenshots/hero_phase_transition.png" alt="相變 — 湧現集群與節點元資料" width="100%"/><br/><em>相變 — 湧現集群形成與豐富的節點元資料提示</em></td>

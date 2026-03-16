@@ -25,15 +25,15 @@
 ---
 
 <div align="center">
-<img src="docs/screenshots/hero_force_graph.png" alt="Memetic Flow — 262 nodes self-organizing into institutions, trade networks, and norm clusters" width="100%"/>
-<br/><em>Civilization from Scratch — 262 agents self-organizing into institutions and trade networks</em>
+<img src="docs/screenshots/hero_force_graph.png" alt="Memetic Flow — AI Governance Priorities 2026, 105 nodes modeling policy discourse" width="100%"/>
+<br/><em>AI Governance Priorities 2026 — 105 nodes modeling policy discourse across governments, tech companies, and civil society</em>
 </div>
 
 <br/>
 
 <div align="center">
-<img src="docs/gifs/simulation_replay.gif" alt="Simulation replay — watch a civilization emerge over 400 timesteps" width="80%"/>
-<br/><em>Watch a civilization emerge over 400 timesteps — institutions form, norms spread, trade routes crystallize</em>
+<img src="docs/gifs/simulation_replay.gif" alt="Simulation replay — watch AI governance dynamics unfold over 400 timesteps" width="80%"/>
+<br/><em>Watch AI governance dynamics unfold over 400 timesteps — coalitions form, polarization shifts, policy discourse evolves</em>
 </div>
 
 ---
@@ -129,12 +129,12 @@ The **Phase Transition Detector** monitors metric derivatives over sliding windo
 <div align="center">
 <table>
 <tr>
-<td width="50%"><img src="docs/screenshots/hero_force_graph.png" alt="Civilization from Scratch"/><br/><em>Civilization from Scratch — 262 nodes</em></td>
-<td width="50%"><img src="docs/screenshots/hero_metrics_dashboard.png" alt="Social Media Regulation"/><br/><em>Social Media Regulation — polarization dynamics</em></td>
+<td width="50%"><img src="docs/screenshots/hero_force_graph.png" alt="AI Governance Priorities 2026"/><br/><em>AI Governance — 105 nodes, policy discourse</em></td>
+<td width="50%"><img src="docs/screenshots/hero_metrics_dashboard.png" alt="AI Governance metrics dashboard"/><br/><em>AI Governance — metrics dashboard at t=300</em></td>
 </tr>
 <tr>
-<td><img src="docs/screenshots/hero_ai_startup.png" alt="AI Startup Ecosystem"/><br/><em>AI Startup Ecosystem — market competition</em></td>
-<td><img src="docs/screenshots/hero_ecosystem.png" alt="Ecosystem Collapse"/><br/><em>Ecosystem Collapse — 85 species food web</em></td>
+<td><img src="docs/screenshots/hero_tech_startups.png" alt="Tech Startup Ecosystem 2026"/><br/><em>Tech Startup Ecosystem — market dynamics</em></td>
+<td><img src="docs/screenshots/hero_chip_race.png" alt="US-China AI Chip Race"/><br/><em>US-China Chip Race — geopolitical dynamics</em></td>
 </tr>
 <tr>
 <td colspan="2"><img src="docs/screenshots/hero_phase_transition.png" alt="Phase Transition — cluster formation with rich node metadata" width="100%"/><br/><em>Phase transition — emergent cluster formation with rich node metadata tooltips</em></td>
@@ -163,18 +163,17 @@ The **Phase Transition Detector** monitors metric derivatives over sliding windo
 
 ## Demo Scenarios
 
-4 pre-run simulations are included — no API keys needed to explore:
+3 pre-run simulations are included — no API keys needed to explore:
 
 | Demo | Mode | Nodes | Steps | What Happens |
 |---|---|---|---|---|
-| **Civilization from Scratch** | Synthetic Civ | 262 | 400 | Institutions, norms, and trade emerge from 200 agents in 5 geographic clusters |
-| **Social Media Regulation** | Public Discourse | 178 | 250 | Pro/anti regulation factions polarize; moderates get pulled to extremes |
-| **AI Startup Ecosystem** | Market Dynamics | 120 | 250 | 80 startups compete across 8 sectors; VCs drive winner-takes-all concentration |
-| **Ecosystem Collapse** | Ecological | 85 | 400 | Cascading species endangerment when keystone resources degrade |
+| **[AI Governance 2026](https://dns-wq.github.io/memetic-flow/#/demo/ai_governance)** | Public Discourse | 105 | 400 | Tech companies, governments, and civil society shape AI policy through advocacy and regulation |
+| **[Tech Startup Ecosystem](https://dns-wq.github.io/memetic-flow/#/demo/tech_startups)** | Market Dynamics | 51 | 400 | AI companies and VCs compete for capital, talent, and market dominance |
+| **[US-China Chip Race](https://dns-wq.github.io/memetic-flow/#/demo/chip_race)** | Ecosystem | 59 | 400 | Geopolitical semiconductor competition: export controls, supply chains, and AI strategy |
 
-Every agent in every demo has a **unique role and goals** — hover any node to see its individual persona, from "Irrigation engineer designing canal networks" to "Pearl diver retrieving pearls for luxury trade."
+Every entity has a **unique role and relationships** — hover any node to see its description, goals, and live state values.
 
-Run the app and navigate to `/demo/{scenario_name}` to explore.
+**[Try the live demo →](https://dns-wq.github.io/memetic-flow/)**
 
 ---
 

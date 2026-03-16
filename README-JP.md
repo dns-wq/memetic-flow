@@ -25,15 +25,15 @@
 ---
 
 <div align="center">
-<img src="docs/screenshots/hero_force_graph.png" alt="Memetic Flow — 262ノードが制度・貿易ネットワーク・規範クラスターに自己組織化" width="100%"/>
-<br/><em>ゼロからの文明 — 262エージェントが制度と貿易ネットワークに自己組織化</em>
+<img src="docs/screenshots/hero_force_graph.png" alt="Memetic Flow — AIガバナンス優先事項2026、105ノードで政策議論をモデリング" width="100%"/>
+<br/><em>AIガバナンス優先事項2026 — 政府、テック企業、市民社会間の政策議論を105ノードでモデリング</em>
 </div>
 
 <br/>
 
 <div align="center">
-<img src="docs/gifs/simulation_replay.gif" alt="シミュレーション再生 — 400タイムステップで文明が創発する様子" width="80%"/>
-<br/><em>400タイムステップで文明が創発 — 制度の形成、規範の伝播、交易路の結晶化</em>
+<img src="docs/gifs/simulation_replay.gif" alt="シミュレーション再生 — 400タイムステップでAIガバナンスダイナミクスが展開" width="80%"/>
+<br/><em>400タイムステップでAIガバナンスダイナミクスが展開 — 連合形成、分極化の変化、政策議論の進化</em>
 </div>
 
 ---
@@ -90,12 +90,12 @@ Canvas レンダリングの D3.js フォースグラフ。動的パーティク
 <div align="center">
 <table>
 <tr>
-<td width="50%"><img src="docs/screenshots/hero_force_graph.png" alt="ゼロからの文明"/><br/><em>ゼロからの文明 — 262ノード</em></td>
-<td width="50%"><img src="docs/screenshots/hero_metrics_dashboard.png" alt="ソーシャルメディア規制"/><br/><em>ソーシャルメディア規制 — 分極化ダイナミクス</em></td>
+<td width="50%"><img src="docs/screenshots/hero_force_graph.png" alt="AIガバナンス優先事項2026"/><br/><em>AIガバナンス — 105ノード、政策議論</em></td>
+<td width="50%"><img src="docs/screenshots/hero_metrics_dashboard.png" alt="AIガバナンス指標ダッシュボード"/><br/><em>AIガバナンス — t=300の指標ダッシュボード</em></td>
 </tr>
 <tr>
-<td><img src="docs/screenshots/hero_ai_startup.png" alt="AIスタートアップエコシステム"/><br/><em>AIスタートアップエコシステム — 市場競争</em></td>
-<td><img src="docs/screenshots/hero_ecosystem.png" alt="生態系崩壊"/><br/><em>生態系崩壊 — 85種の食物網</em></td>
+<td><img src="docs/screenshots/hero_tech_startups.png" alt="テックスタートアップエコシステム2026"/><br/><em>テックスタートアップエコシステム — 市場ダイナミクス</em></td>
+<td><img src="docs/screenshots/hero_chip_race.png" alt="米中AIチップ競争"/><br/><em>米中チップ競争 — 地政学ダイナミクス</em></td>
 </tr>
 <tr>
 <td colspan="2"><img src="docs/screenshots/hero_phase_transition.png" alt="相転移 — クラスター形成とノードメタデータ" width="100%"/><br/><em>相転移 — 創発的クラスター形成と豊富なノードメタデータツールチップ</em></td>
