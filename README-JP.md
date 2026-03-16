@@ -97,6 +97,9 @@ Canvas レンダリングの D3.js フォースグラフ。動的パーティク
 <td><img src="docs/screenshots/hero_ai_startup.png" alt="AIスタートアップエコシステム"/><br/><em>AIスタートアップエコシステム — 市場競争</em></td>
 <td><img src="docs/screenshots/hero_ecosystem.png" alt="生態系崩壊"/><br/><em>生態系崩壊 — 85種の食物網</em></td>
 </tr>
+<tr>
+<td colspan="2"><img src="docs/screenshots/hero_phase_transition.png" alt="相転移 — クラスター形成とノードメタデータ" width="100%"/><br/><em>相転移 — 創発的クラスター形成と豊富なノードメタデータツールチップ</em></td>
+</tr>
 </table>
 </div>
 

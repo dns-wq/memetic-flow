@@ -97,6 +97,9 @@ Canvas 渲染的 D3.js 力導向圖，支援動態粒子流、豐富的工具提
 <td><img src="docs/screenshots/hero_ai_startup.png" alt="AI新創生態"/><br/><em>AI新創生態 — 市場競爭</em></td>
 <td><img src="docs/screenshots/hero_ecosystem.png" alt="生態系統崩潰"/><br/><em>生態系統崩潰 — 85個物種食物網</em></td>
 </tr>
+<tr>
+<td colspan="2"><img src="docs/screenshots/hero_phase_transition.png" alt="相變 — 湧現集群與節點元資料" width="100%"/><br/><em>相變 — 湧現集群形成與豐富的節點元資料提示</em></td>
+</tr>
 </table>
 </div>
 

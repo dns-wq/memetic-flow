@@ -109,6 +109,9 @@ Canvas 渲染的 D3.js 力导向图：
 <td><img src="docs/screenshots/hero_ai_startup.png" alt="AI创业生态"/><br/><em>AI创业生态 — 市场竞争</em></td>
 <td><img src="docs/screenshots/hero_ecosystem.png" alt="生态系统崩溃"/><br/><em>生态系统崩溃 — 85个物种食物网</em></td>
 </tr>
+<tr>
+<td colspan="2"><img src="docs/screenshots/hero_phase_transition.png" alt="相变 — 涌现集群与节点元数据" width="100%"/><br/><em>相变 — 涌现集群形成与丰富的节点元数据提示</em></td>
+</tr>
 </table>
 </div>
 

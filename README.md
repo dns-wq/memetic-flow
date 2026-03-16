@@ -136,6 +136,9 @@ The **Phase Transition Detector** monitors metric derivatives over sliding windo
 <td><img src="docs/screenshots/hero_ai_startup.png" alt="AI Startup Ecosystem"/><br/><em>AI Startup Ecosystem — market competition</em></td>
 <td><img src="docs/screenshots/hero_ecosystem.png" alt="Ecosystem Collapse"/><br/><em>Ecosystem Collapse — 85 species food web</em></td>
 </tr>
+<tr>
+<td colspan="2"><img src="docs/screenshots/hero_phase_transition.png" alt="Phase Transition — cluster formation with rich node metadata" width="100%"/><br/><em>Phase transition — emergent cluster formation with rich node metadata tooltips</em></td>
+</tr>
 </table>
 </div>
 
