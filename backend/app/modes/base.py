@@ -38,6 +38,13 @@ class SimulationMode(ABC):
     # --- Discovery ---
     suggested_for: list[str] = []
 
+    def configure(self, **kwargs: Any) -> None:
+        """Apply runtime configuration to this mode.
+
+        Called by the engine before simulation starts.  Subclasses can
+        override to accept custom parameters; the default is a no-op.
+        """
+
     def get_templates(self) -> list[str]:
         """Return the full list of templates this mode activates."""
         return list(self.required_templates)
